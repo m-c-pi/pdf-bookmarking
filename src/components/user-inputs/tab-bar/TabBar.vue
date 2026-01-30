@@ -1,16 +1,56 @@
 
 <script setup>
+import { ref, computed } from 'vue';
 
+const props = defineProps({
+    initialTabIndex: {
+        type: Number,
+        // 0 = This pdf file
+        // 1 = All pdf files
+        default: 0
+    }
+});
+
+const emit = defineEmits(['change']);
+
+const activeTabIndex = ref(props.initialTabIndex);
+
+const activeTabStyle = computed(() => {
+    const baseTranslateX = 10; // var(--padding-md) is 10px
+
+    if (activeTabIndex.value === 0) {
+        return {
+            transform: `translate(${baseTranslateX}px, -50%)`
+        };
+    } else {
+        return {
+            transform: `translate(calc(100% + var(--padding-md) + ${baseTranslateX}px), -50%)`
+        };
+    }
+});
+
+const handleTabClick = (index) => {
+    activeTabIndex.value = index;
+    emit('change', index);
+};
 </script>
 
 <template>
     <div class="tab-bar-wrapper">
-        <div class="active-tab"></div>
+        <div class="active-tab" :style="activeTabStyle"></div>
         <div class="text-layer">
-            <div class="text-item">
+            <div
+                class="text-item"
+                :class="{ 'active': activeTabIndex === 0 }"
+                @click="handleTabClick(0)"
+            >
                 This pdf file
             </div>
-            <div class="text-item">
+            <div
+                class="text-item"
+                :class="{ 'active': activeTabIndex === 1 }"
+                @click="handleTabClick(1)"
+            >
                 All pdf files
             </div>
         </div>
@@ -54,9 +94,12 @@
         overflow: hidden;
         flex-wrap: nowrap;
         transition: opacity linear 0.2s;
+        cursor: pointer;
+        pointer-events: auto;
+        user-select: none;
     }
 
-    .text-item:hover {
+    .text-item:not(.active):hover {
         transition: background-color ease-in 0.1s;
         background-color: var(--color-primary-container);
     }
@@ -67,10 +110,10 @@
         position: absolute;
         top: 50%;
         left: 0;
-        transform: translate(10px, -50%);
         width: calc(
             50% - var(--padding-md) - (var(--padding-md) / 2)
         );
-        height: calc(100% - var(--padding-md))
+        height: calc(100% - var(--padding-md));
+        transition: transform 0.3s ease-in-out;
     }
 </style>

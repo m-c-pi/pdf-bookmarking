@@ -24,7 +24,8 @@ const activeTabStyle = computed(() => {
         };
     } else {
         return {
-            transform: `translate(calc(100% + var(--padding-md) + ${baseTranslateX}px), -50%)`
+            transform: 
+                `translate(calc(100% + var(--padding-md) + ${baseTranslateX}px), -50%)`
         };
     }
 });

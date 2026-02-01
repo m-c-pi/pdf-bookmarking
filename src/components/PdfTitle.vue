@@ -11,7 +11,7 @@ const handleEditClick = () => {
 
 <template>
     <div class="pdf-title-wrapper">
-        <div class="title">The catcher in the rye</div>
+        <div class="title">The catcher in the rye ...uiawdhg adiuaeg iaue zg fieuefb ieufg ieaufgieuf g</div>
         <div class="action-container">
             <IconButton :icon="Edit24Regular" @click="handleEditClick" />
             <IconButton :icon="Delete24Regular" @click="handleEditClick" />

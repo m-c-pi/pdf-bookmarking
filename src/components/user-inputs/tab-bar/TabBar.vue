@@ -16,7 +16,7 @@ const emit = defineEmits(['change']);
 const activeTabIndex = ref(props.initialTabIndex);
 
 const activeTabStyle = computed(() => {
-    const baseTranslateX = 10; // var(--padding-md) is 10px
+    const baseTranslateX = 5; // var(--padding-md) is 10px
 
     if (activeTabIndex.value === 0) {
         return {
@@ -25,7 +25,7 @@ const activeTabStyle = computed(() => {
     } else {
         return {
             transform: 
-                `translate(calc(100% + var(--padding-md) + ${baseTranslateX}px), -50%)`
+                `translate(calc(100% + var(--padding-md) - ${baseTranslateX}px), -50%)`
         };
     }
 });
@@ -107,12 +107,13 @@ const handleTabClick = (index) => {
 
     .active-tab {
         background-color: var(--color-primary-container);
+        opacity: 0,2;
         border-radius: var(--border-radius);
         position: absolute;
         top: 50%;
         left: 0;
         width: calc(
-            50% - var(--padding-md) - (var(--padding-md) / 2)
+            50% - var(--padding-md) / 2
         );
         height: calc(100% - var(--padding-md));
         transition: transform 0.3s ease-in-out;

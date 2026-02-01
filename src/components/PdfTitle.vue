@@ -1,20 +1,39 @@
 
 <script setup>
+import { ref } from 'vue';
 import IconButton from './user-inputs/IconButton.vue';
-import { Edit24Regular, Delete24Regular } from '@vicons/fluent';
+import { Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
+import PdfTitleEditInput from './user-inputs/text-input/PdfTitleEditInput.vue';
+
+const isEditing = ref(false);
+const title = ref('The catcher in the rye');
 
 const handleEditClick = () => {
-    console.log('Edit button clicked!');
-    // Your edit logic here
+    isEditing.value = true;
+};
+
+const handleAccept = () => {
+    isEditing.value = false;
+};
+
+const handleCancel = () => {
+    isEditing.value = false;
 };
 </script>
 
 <template>
     <div class="pdf-title-wrapper">
-        <div class="title">The catcher in the rye ...uiawdhg adiuaeg iaue zg fieuefb ieufg ieaufgieuf g</div>
+        <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" />
+        <div v-else class="title">{{ title }}</div>
         <div class="action-container">
-            <IconButton :icon="Edit24Regular" @click="handleEditClick" />
-            <IconButton :icon="Delete24Regular" @click="handleEditClick" />
+            <template v-if="isEditing">
+                <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
+                <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
+            </template>
+            <template v-else>
+                <IconButton :icon="Edit24Regular" @click="handleEditClick" />
+                <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
+            </template>
         </div>
     </div>
 </template>
@@ -32,11 +51,16 @@ const handleEditClick = () => {
         padding-inline: var(--padding-lg);
         font-size: 14px;
         width: fit-content;
+        max-width: 300px;
         border-radius: var(--border-radius);
     }
 
     .title {
         color: var(--color-primary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
     }
 
     .action-container {

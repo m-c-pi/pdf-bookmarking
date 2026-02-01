@@ -1,9 +1,13 @@
 
 <script setup>
-defineProps({
+const props = defineProps({
     icon: {
         type: Object,
         required: true
+    },
+    color: {
+        type: String,
+        default: null
     }
 });
 
@@ -15,7 +19,7 @@ const handleClick = () => {
 </script>
 
 <template>
-    <button class="icon-button" @click="handleClick">
+    <button class="icon-button" :style="props.color ? { '--button-color': props.color } : {}" @click="handleClick">
         <component :is="icon" />
     </button>
 </template>
@@ -33,7 +37,7 @@ const handleClick = () => {
     }
 
     .icon-button:hover {
-        border: 1px solid var(--color-primary);
-        color: var(--color-primary);
+        border: 1px solid var(--button-color, var(--color-primary));
+        color: var(--button-color, var(--color-primary));
     }
 </style>

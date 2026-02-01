@@ -33,6 +33,7 @@ const handleInput = (event) => {
     .text-input-wrapper {
         width: 100%;
         height: var(--input-height-lg);
+        max-height: 100%;
         border: 1px solid var(--color-outline);
         border-radius: var(--border-radius);
         transition: border-color 0.2s ease;
@@ -49,7 +50,6 @@ const handleInput = (event) => {
         background-color: var(--color-surface-container-low);
         border: none;
         outline: none;
-        padding: 0;
         margin: 0;
         font: inherit;
         color: var(--color-on-surface-container);

@@ -12,6 +12,7 @@
   --color-surface-container: #F7F7FA;
   --color-surface-container-low: #FFFFFF;
   --color-on-surface-container-variant: #D1D1D1;
+  --color-decline: #D32F2F;
 
   --padding-lg: 22px;
   --padding-md: 10px;
@@ -40,6 +41,7 @@
       --color-surface-container: #18181C;
       --color-surface-container-low: #18181C;
       --color-on-surface-container-variant: #2D2D30;
+      --color-decline: #EF5350;
   }
 }
 

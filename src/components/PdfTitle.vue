@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import gsap from 'gsap';
 import IconButton from './user-inputs/IconButton.vue';
 import { Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
@@ -23,10 +23,6 @@ const handleAccept = () => {
 const handleCancel = () => {
     isEditing.value = false;
 };
-
-onMounted(() => {
-    console.log('Shadow width:', shadowRef.value?.offsetWidth);
-});
 
 watch(isEditing, (newValue) => {
     if (newValue && wrapperRef.value) {
@@ -56,11 +52,11 @@ watch(isEditing, (newValue) => {
 </script>
 
 <template>
-    <div>
-        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }">
-            <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" />
+    <div class="shadow-wrapper">
+        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="!isEditing && handleEditClick()">
+            <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
             <div v-else class="title">{{ title }}</div>
-            <div class="action-container">
+            <div class="action-container" @click.stop>
                 <template v-if="isEditing">
                     <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
                     <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
@@ -71,6 +67,7 @@ watch(isEditing, (newValue) => {
                 </template>
             </div>
         </div>
+        <!-- To determine target animation size from edit mode -> non edit mode -->
         <div ref="shadowRef" class="pdf-title-wrapper shadow fit-content">
             <div class="title">{{ title }}</div>
             <div class="action-container">
@@ -78,15 +75,12 @@ watch(isEditing, (newValue) => {
                 <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
             </div>
         </div>
-        <div class="test"></div>
     </div>
 </template>
 
 <style scoped>
-    .test {
-        height: 50px;
-        width: 262px;
-        background-color: aqua;
+    .shadow-wrapper {
+        position: relative;    
     }
 
     .pdf-title-wrapper {
@@ -106,7 +100,11 @@ watch(isEditing, (newValue) => {
     }
 
     .shadow {
-        /* opacity: 0; */
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 
     .pdf-title-wrapper.fit-content {

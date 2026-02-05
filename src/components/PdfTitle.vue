@@ -6,36 +6,41 @@ import IconButton from './user-inputs/IconButton.vue';
 import { Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
 import PdfTitleEditInput from './user-inputs/text-input/PdfTitleEditInput.vue';
 
-const isEditing = ref(false);
+const PdfTitleState = {
+    EDITING: "editing",
+    DEFAULT: "default"
+}
+
+const pdfTitleState = ref(PdfTitleState.DEFAULT);
 const title = ref('The catcher in the rye');
 const wrapperRef = ref(null);
 const shadowRef = ref(null);
 const useFitContent = ref(true);
 
-const handleEditClick = () => {
-    isEditing.value = true;
+const handleEdit = () => {
+    pdfTitleState.value = PdfTitleState.EDITING;
 };
 
 const handleAccept = () => {
-    isEditing.value = false;
+    pdfTitleState.value = PdfTitleState.DEFAULT;
 };
 
 const handleCancel = () => {
-    isEditing.value = false;
+    pdfTitleState.value = PdfTitleState.DEFAULT;
 };
 
-watch(isEditing, (newValue) => {
-    if (newValue && wrapperRef.value) {
+watch(pdfTitleState, (newValue) => {
+    if (newValue === PdfTitleState.EDITING && wrapperRef.value) {
         const currentWidth = wrapperRef.value.offsetWidth;
         gsap.set(wrapperRef.value, { maxWidth: currentWidth });
         useFitContent.value = false;
 
         nextTick(() => {
             gsap.to(wrapperRef.value,
-                { maxWidth: 300, duration: 0.3, ease: 'power2.out' }
+                { maxWidth: 300, duration: 1, ease: 'elastic.out(1, 0.5)' }
             );
         });
-    } else if (!newValue && wrapperRef.value && shadowRef.value) {
+    } else if (newValue === PdfTitleState.DEFAULT && wrapperRef.value && shadowRef.value) {
         const targetWidth = shadowRef.value.offsetWidth;
 
         nextTick(() => {
@@ -53,16 +58,16 @@ watch(isEditing, (newValue) => {
 
 <template>
     <div class="shadow-wrapper">
-        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="!isEditing && handleEditClick()">
-            <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
+        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="pdfTitleState !== PdfTitleState.EDITING && handleEdit()">
+            <PdfTitleEditInput v-if="pdfTitleState === PdfTitleState.EDITING" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
             <div v-else class="title">{{ title }}</div>
             <div class="action-container" @click.stop>
-                <template v-if="isEditing">
+                <template v-if="pdfTitleState === PdfTitleState.EDITING">
                     <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
                     <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
                 </template>
                 <template v-else>
-                    <IconButton :icon="Edit24Regular" @click="handleEditClick" />
+                    <IconButton :icon="Edit24Regular" @click="handleEdit" />
                     <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
                 </template>
             </div>

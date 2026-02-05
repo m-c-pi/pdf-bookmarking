@@ -44,13 +44,14 @@ const handleCancel = () => {
         border-radius: var(border-radius);
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: var(--gap-md);
         height: var(--input-height-sm);
         box-sizing: content-box;
         padding-block: var(--padding-sm);
         padding-inline: var(--padding-lg);
         font-size: 14px;
-        width: fit-content;
+        /* width: fit-content; */
         max-width: 300px;
         border-radius: var(--border-radius);
     }

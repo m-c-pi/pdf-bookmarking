@@ -22,7 +22,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-    <div class="pdf-title-wrapper">
+    <div class="pdf-title-wrapper" :class="{ 'fit-content': !isEditing }">
         <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" />
         <div v-else class="title">{{ title }}</div>
         <div class="action-container">
@@ -51,9 +51,12 @@ const handleCancel = () => {
         padding-block: var(--padding-sm);
         padding-inline: var(--padding-lg);
         font-size: 14px;
-        /* width: fit-content; */
         max-width: 300px;
         border-radius: var(--border-radius);
+    }
+
+    .pdf-title-wrapper.fit-content {
+        width: fit-content;
     }
 
     .title {

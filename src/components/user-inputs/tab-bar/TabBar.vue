@@ -102,7 +102,7 @@ const handleTabClick = (index) => {
 
     .text-item:not(.active):hover {
         transition: background-color ease-in 0.1s;
-        background-color: var(--color-primary-container);
+        background-color: #2f2f2f;
     }
 
     .active-tab {

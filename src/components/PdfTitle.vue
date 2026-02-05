@@ -1,12 +1,14 @@
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, nextTick } from 'vue';
+import gsap from 'gsap';
 import IconButton from './user-inputs/IconButton.vue';
 import { Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
 import PdfTitleEditInput from './user-inputs/text-input/PdfTitleEditInput.vue';
 
 const isEditing = ref(false);
 const title = ref('The catcher in the rye');
+const wrapperRef = ref(null);
 
 const handleEditClick = () => {
     isEditing.value = true;
@@ -19,10 +21,23 @@ const handleAccept = () => {
 const handleCancel = () => {
     isEditing.value = false;
 };
+
+watch(isEditing, (newValue) => {
+    if (newValue && wrapperRef.value) {
+        const currentWidth = wrapperRef.value.offsetWidth;
+
+        nextTick(() => {
+            gsap.fromTo(wrapperRef.value,
+                { maxWidth: currentWidth },
+                { maxWidth: 300, duration: 0.3, ease: 'power2.out' }
+            );
+        });
+    }
+});
 </script>
 
 <template>
-    <div class="pdf-title-wrapper" :class="{ 'fit-content': !isEditing }">
+    <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': !isEditing }">
         <PdfTitleEditInput v-if="isEditing" v-model="title" @blur="handleCancel" />
         <div v-else class="title">{{ title }}</div>
         <div class="action-container">

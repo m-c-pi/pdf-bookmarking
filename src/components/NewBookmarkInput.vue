@@ -8,7 +8,7 @@ import TextInput from './user-inputs/text-input/TextInput.vue';
 
 <template>
     <div class="new-bookmark-wrapper">
-        <TextInput size="md" placeholder="New bookmark title" />
+        <TextInput fontSize="14" placeholder="New bookmark title" />
         <PageInput />
     </div>
 </template>
@@ -18,6 +18,6 @@ import TextInput from './user-inputs/text-input/TextInput.vue';
         display: flex;
         flex-direction: row;
         gap: var(--gap-md);
-        max-width: 100%;
+        height: 100%;
     }
 </style>

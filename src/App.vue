@@ -13,14 +13,18 @@ const searchValue = ref('');
   <div class="wrapper">
     <header>
       <TabBar />
-      <TextInput v-model="searchValue" placeholder="Search" />
+      <div class="search-wrapper">
+        <TextInput v-model="searchValue" placeholder="Search" />
+      </div>
     </header>
     <PdfTitle />
     <div class="bookmarks-list">
       <BookmarkEntry />
       <BookmarkEntry />
       <BookmarkEntry />
-      <NewBookmarkInput />
+      <div class="new-bookmark-wrapper">
+        <NewBookmarkInput />
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +34,14 @@ const searchValue = ref('');
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm)
+  }
+
+  header .search-wrapper {
+    height: var(--input-height-lg);
+  }
+
+  .new-bookmark-wrapper {
+    height: var(--input-height-md);
   }
 
   .wrapper {

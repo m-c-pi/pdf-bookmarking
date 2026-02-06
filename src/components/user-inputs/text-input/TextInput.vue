@@ -1,12 +1,12 @@
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import IconButton from '../IconButton.vue';
 import { Dismiss24Regular } from '@vicons/fluent';
 
 const inputRef = ref(null);
 
-const props = defineProps({
+defineProps({
     placeholder: {
         type: String,
         default: ''
@@ -15,14 +15,11 @@ const props = defineProps({
         type: String,
         default: ''
     },
-    size: {
-        type: String,
-        default: 'lg',
-        validator: (value) => ['lg', 'md', 'sm'].includes(value)
+    fontSize: {
+        type: Number,
+        default: 16
     },
 });
-
-const inputHeight = computed(() => `var(--input-height-${props.size})`);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -37,12 +34,13 @@ const handleClear = () => {
 </script>
 
 <template>
-    <div class="text-input-wrapper" :style="{ height: inputHeight }">
+    <div class="text-input-wrapper">
         <input
             ref="inputRef"
             type="text"
             :placeholder="placeholder"
             :value="modelValue"
+            :style="{ fontSize: fontSize + 'px' }"
             @input="handleInput"
         >
         <div v-if="modelValue" class="clear-container">
@@ -54,8 +52,8 @@ const handleClear = () => {
 <style scoped>
     .text-input-wrapper {
         width: 100%;
+        height: 100%;
         min-width: 0;
-        max-height: 100%;
         border: 1px solid var(--color-outline);
         border-radius: var(--border-radius);
         transition: border-color 0.2s ease;

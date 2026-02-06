@@ -69,7 +69,7 @@ const handleTabClick = (index) => {
         flex-direction: row;
         position: relative;
         cursor: pointer;
-        border: 1px solid var(--color-outline);
+        border: 1px solid transparent;
     }
 
     .text-layer {
@@ -101,13 +101,14 @@ const handleTabClick = (index) => {
         user-select: none;
     }
 
-    .text-item:not(.active):hover {
+    /* .text-item:not(.active):hover {
         transition: background-color ease-in 0.1s;
         background-color: #2f2f2f;
-    }
+    } */
 
     .active-tab {
         background-color: var(--color-primary-container);
+        border: 1px solid var(--color-primary);
         opacity: 0,2;
         border-radius: var(--border-radius);
         position: absolute;
@@ -118,5 +119,26 @@ const handleTabClick = (index) => {
         );
         height: calc(100% - var(--padding-md));
         transition: transform 0.3s ease-in-out;
+    }
+
+</style>
+
+<style>
+    :root[data-theme="dark"] .active-tab {
+        border-color: transparent;
+    }
+
+    :root[data-theme="dark"] .tab-bar-wrapper {
+        border-color: var(--color-outline);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .active-tab {
+            border-color: transparent;
+        }
+
+        :root:not([data-theme="light"]) .tab-bar-wrapper {
+            border-color: var(--color-outline);
+        }
     }
 </style>

@@ -131,3 +131,15 @@ watch(pdfTitleState, (newValue) => {
         height: 100%;
     }
 </style>
+
+<style>
+    :root:not([data-theme="dark"]) .pdf-title-wrapper {
+        background-color: var(--color-primary-container);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .pdf-title-wrapper {
+            background-color: var(--color-surface-container);
+        }
+    }
+</style>

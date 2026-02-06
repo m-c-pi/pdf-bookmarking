@@ -91,6 +91,7 @@ const decrementPage = () => {
         outline: none;
         margin: 0;
         font: inherit;
+        font-size: 14;
         color: var(--color-on-surface-container);
         box-sizing: border-box;
         border-radius: var(--border-radius);

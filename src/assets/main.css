@@ -2,6 +2,22 @@
 
 #app {
   flex: 1;
+  min-height: 0;
   background-color: var(--color-surface);
   padding: var(--padding-lg);
+}
+
+::-webkit-scrollbar {
+  width: 25px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-container);
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  background-clip: padding-box;
 }

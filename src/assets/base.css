@@ -57,6 +57,9 @@ html,
 body {
   width: 500px;
   height: 600px;
+  max-width: 500px;
+  max-height: 600px;
+  overflow: hidden;
   /* TODOD: Change later */
   background-color: black;
   color: var(--color-on-surface);

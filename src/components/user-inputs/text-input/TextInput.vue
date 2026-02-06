@@ -78,8 +78,8 @@ const handleClear = () => {
         margin: 0;
         font: inherit;
         color: var(--color-on-surface-container);
-        box-sizing: border-box;
-        padding: var(--padding-lg);
+        padding-inline: var(--padding-lg);
+        padding-block: var(--padding-md);
         border-radius: var(--border-radius);
     }
 

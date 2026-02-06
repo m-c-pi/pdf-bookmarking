@@ -69,6 +69,7 @@ const handleTabClick = (index) => {
         flex-direction: row;
         position: relative;
         cursor: pointer;
+        border: 1px solid var(--color-outline);
     }
 
     .text-layer {

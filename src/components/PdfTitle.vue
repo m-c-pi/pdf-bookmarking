@@ -4,7 +4,7 @@ import { ref, watch, nextTick } from 'vue';
 import gsap from 'gsap';
 import IconButton from './user-inputs/IconButton.vue';
 import { Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
-import PdfTitleEditInput from './user-inputs/text-input/PdfTitleEditInput.vue';
+import EditNameInput from './user-inputs/text-input/EditNameInput.vue';
 
 const PdfTitleState = {
     EDITING: "editing",
@@ -59,7 +59,7 @@ watch(pdfTitleState, (newValue) => {
 <template>
     <div class="shadow-wrapper">
         <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="pdfTitleState !== PdfTitleState.EDITING && handleEdit()">
-            <PdfTitleEditInput v-if="pdfTitleState === PdfTitleState.EDITING" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
+            <EditNameInput v-if="pdfTitleState === PdfTitleState.EDITING" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
             <div v-else class="title">{{ title }}</div>
             <div class="action-container" @click.stop>
                 <template v-if="pdfTitleState === PdfTitleState.EDITING">
@@ -128,7 +128,6 @@ watch(pdfTitleState, (newValue) => {
         padding: var(--padding-sm);
         display: flex;
         flex-direction: row;
-        gap: var(--gap-sm);
         height: 100%;
     }
 </style>

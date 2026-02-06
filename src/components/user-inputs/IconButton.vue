@@ -13,8 +13,8 @@ const props = defineProps({
 
 const emit = defineEmits(['click']);
 
-const handleClick = () => {
-    emit('click');
+const handleClick = (e) => {
+    emit('click', e);
 };
 </script>
 

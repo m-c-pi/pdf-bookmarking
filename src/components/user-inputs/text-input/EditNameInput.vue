@@ -54,6 +54,7 @@ onMounted(() => {
     
     .text-input-wrapper input {
         width: 100%;
+        min-width: 0;
         height: 100%;
         background-color: var(--color-surface-container-low);
         border: none;

@@ -24,12 +24,7 @@ const searchValue = ref('');
         <BookmarkEntry />
         <BookmarkEntry />
         <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
+
       </div>
       <div class="new-bookmark-wrapper">
         <NewBookmarkInput />

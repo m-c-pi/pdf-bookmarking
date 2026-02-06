@@ -29,7 +29,7 @@ const handleClick = (e) => {
         height: 100%;
         aspect-ratio: 1;
         border-radius: var(--border-radius);
-        background-color: var(--color-surface-container);
+        background-color: transparent;
         border: none;
         cursor: pointer;
         color: var(--color-on-surface-container-variant);

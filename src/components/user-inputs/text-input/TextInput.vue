@@ -2,11 +2,11 @@
 <script setup>
 import { ref } from 'vue';
 import IconButton from '../IconButton.vue';
-import { Dismiss24Regular } from '@vicons/fluent';
+import { Dismiss24Regular, Checkmark24Regular } from '@vicons/fluent';
 
 const inputRef = ref(null);
 
-defineProps({
+const props = defineProps({
     placeholder: {
         type: String,
         default: ''
@@ -18,6 +18,10 @@ defineProps({
     fontSize: {
         type: Number,
         default: 16
+    },
+    onAccept: {
+        type: Function,
+        default: null
     },
 });
 
@@ -31,6 +35,12 @@ const handleClear = () => {
     emit('update:modelValue', '');
     inputRef.value?.focus();
 };
+
+const handleAccept = () => {
+    if (props.onAccept) {
+        props.onAccept(props.modelValue);
+    }
+};
 </script>
 
 <template>
@@ -43,7 +53,8 @@ const handleClear = () => {
             :style="{ fontSize: fontSize + 'px' }"
             @input="handleInput"
         >
-        <div v-if="modelValue" class="clear-container">
+        <div v-if="modelValue" class="button-container">
+            <IconButton v-if="props.onAccept" :icon="Checkmark24Regular" color="var(--color-accept)" @click="handleAccept" />
             <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleClear" />
         </div>
     </div>
@@ -83,10 +94,11 @@ const handleClear = () => {
         border-radius: var(--border-radius);
     }
 
-    .clear-container {
+    .button-container {
+        display: flex;
+        gap: var(--padding-sm);
         padding: var(--padding-sm);
         height: var(--input-height-sm);
-        aspect-ratio: 1;
         margin-right: var(--padding-lg);
     }
 

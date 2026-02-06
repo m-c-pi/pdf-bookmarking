@@ -1,14 +1,19 @@
 
 <script setup>
+import { ref } from 'vue';
 import PageInput from './user-inputs/PageInput.vue';
 import TextInput from './user-inputs/text-input/TextInput.vue';
 
+const bookmarkTitle = ref('');
 
+const onAccept = (value) => {
+    console.log('Accepted:', value);
+};
 </script>
 
 <template>
     <div class="new-bookmark-wrapper">
-        <TextInput fontSize="14" placeholder="New bookmark title" />
+        <TextInput v-model="bookmarkTitle" :onAccept="onAccept" fontSize="14" placeholder="New bookmark title" />
         <PageInput />
     </div>
 </template>

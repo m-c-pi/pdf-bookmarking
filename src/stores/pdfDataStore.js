@@ -1,5 +1,5 @@
 /* global chrome */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 // Example structure
@@ -43,6 +43,15 @@ export const usePdfDataStore = defineStore('pdfData', () => {
         const result = await chrome.storage.local.get('bookmarksByUrl');
         allBookmarks.value = result.bookmarksByUrl || {};
     }
+
+  function getBookmarksByUrl(url) {
+    return computed(() => {
+      const bookmarks = allBookmarks.value[url]?.bookmarks || {}
+      return Object.entries(bookmarks)
+        .map(([id, bookmark]) => ({ ...bookmark, id, url }))
+        .sort((a, b) => b.order - a.order)
+    })
+  }
 
   async function saveBookmarks() {
     await chrome.storage.local.set({ bookmarksByUrl: allBookmarks.value })
@@ -94,6 +103,18 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await saveBookmarks()
   }
 
+  async function updateBookmarkTitle(url, id, newTitle) {
+    const bookmark = allBookmarks.value[url]?.bookmarks?.[id]
+    if (!bookmark) return false
+
+    const validated = validateBookmark(newTitle, bookmark.page)
+    if (!validated) return false
+
+    bookmark.title = validated.title
+    await saveBookmarks()
+    return true
+  }
+
   async function deleteBookmark(url, id) {
     if (allBookmarks.value[url]?.bookmarks) {
       delete allBookmarks.value[url].bookmarks[id]
@@ -111,5 +132,18 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await saveBookmarks()
   }
 
-  return { activeTabUrl, pdfTitle, isPdf, allBookmarks, init, addBookmark, updatePdfTitle, deleteBookmark, deleteAllByUrl, deleteAll }
+    return { 
+        activeTabUrl, 
+        pdfTitle, 
+        isPdf, 
+        allBookmarks, 
+        getBookmarksByUrl, 
+        init, 
+        addBookmark, 
+        updatePdfTitle, 
+        updateBookmarkTitle, 
+        deleteBookmark, 
+        deleteAllByUrl, 
+        deleteAll 
+    }
 })

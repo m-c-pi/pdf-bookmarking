@@ -33,10 +33,16 @@ const handleEdit = () => {
 };
 
 const handleAccept = () => {
+    if (!title.value.trim()) {
+        handleCancel();
+        return;
+    }
+    pdfDataStore.updateBookmarkTitle(props.bookmark.url, props.bookmark.id, title.value.trim());
     bookmarkState.value = BookmarkState.DEFAULT;
 };
 
 const handleCancel = () => {
+    title.value = props.bookmark.title;
     bookmarkState.value = BookmarkState.DEFAULT;
 };
 

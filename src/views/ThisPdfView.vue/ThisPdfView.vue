@@ -9,10 +9,7 @@
     const pdfDataStore = usePdfDataStore();
 
     const currentBookmarks = computed(() => {
-        const bookmarks = pdfDataStore.allBookmarks[pdfDataStore.activeTabUrl]?.bookmarks || {};
-        return Object.entries(bookmarks)
-            .map(([id, bookmark]) => ({ ...bookmark, id, url: pdfDataStore.activeTabUrl }))
-            .sort((a, b) => b.order - a.order);
+        return pdfDataStore.getBookmarksByUrl(pdfDataStore.activeTabUrl).value;
     });
 
     const displayTitle = computed(() => {

@@ -137,6 +137,11 @@ watch(page, (newPage) => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: grab;
+}
+
+.order-button-wrapper:active {
+  cursor: grabbing;
 }
 
 .order-icon {

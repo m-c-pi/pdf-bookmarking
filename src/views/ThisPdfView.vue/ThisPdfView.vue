@@ -1,14 +1,45 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import Sortable from 'sortablejs'
 import PdfTitle from '@/components/PdfTitle.vue'
 import BookmarkEntry from '@/components/bookmark-entry/BookmarkEntry.vue'
 import NewBookmarkInput from '@/components/NewBookmarkInput.vue'
 import { usePdfDataStore } from '@/stores/pdfDataStore'
 
 const pdfDataStore = usePdfDataStore()
+const bookmarksRef = ref(null)
+let sortableInstance = null
 
 const currentBookmarks = computed(() => {
   return pdfDataStore.getBookmarksByUrl(pdfDataStore.activeTabUrl).value
+})
+
+function initSortable() {
+  if (sortableInstance) sortableInstance.destroy()
+  if (!bookmarksRef.value) return
+
+  sortableInstance = Sortable.create(bookmarksRef.value, {
+    handle: '.order-button-wrapper',
+    animation: 150,
+    onEnd(evt) {
+      const ids = currentBookmarks.value.map((b) => b.id)
+      const [moved] = ids.splice(evt.oldIndex, 1)
+      ids.splice(evt.newIndex, 0, moved)
+      pdfDataStore.reorderBookmarks(pdfDataStore.activeTabUrl, ids)
+    },
+  })
+}
+
+onMounted(() => {
+  nextTick(initSortable)
+})
+
+watch(currentBookmarks, () => {
+  nextTick(initSortable)
+})
+
+onBeforeUnmount(() => {
+  if (sortableInstance) sortableInstance.destroy()
 })
 
 const displayTitle = computed(() => {
@@ -27,7 +58,7 @@ const onDelete = () => {
 <template>
   <PdfTitle :title="displayTitle" :onEdit="onEditTitle" :onDelete="onDelete" />
   <div class="bookmarks-list">
-    <div class="bookmarks">
+    <div ref="bookmarksRef" class="bookmarks">
       <BookmarkEntry v-for="bookmark in currentBookmarks" :key="bookmark.id" :bookmark="bookmark" />
       <div v-if="currentBookmarks.length === 0" class="empty">-- No bookmarks saved --</div>
     </div>

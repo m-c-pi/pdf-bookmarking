@@ -58,6 +58,10 @@ const handleDelete = () => {
   pdfDataStore.deleteBookmark(props.bookmark.url, props.bookmark.id)
 }
 
+const handleOrderChange = (direction) => {
+  pdfDataStore.changeBookmarkOrder(props.bookmark.url, props.bookmark.id, direction)
+}
+
 watch(page, (newPage) => {
   pdfDataStore.updateBookmarkPage(props.bookmark.url, props.bookmark.id, newPage)
 })
@@ -67,8 +71,8 @@ watch(page, (newPage) => {
   <div class="bookmark-entry-wrapper">
     <div class="entry">
       <div class="order-button-wrapper">
-        <ChevronUp24Regular class="order-icon" />
-        <ChevronDown24Regular class="order-icon" />
+        <ChevronUp24Regular class="order-icon" @click.stop="handleOrderChange('up')" />
+        <ChevronDown24Regular class="order-icon" @click.stop="handleOrderChange('down')" />
       </div>
       <div
         class="title-wrapper"

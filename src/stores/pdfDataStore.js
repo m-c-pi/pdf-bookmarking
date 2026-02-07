@@ -126,6 +126,28 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     return true
   }
 
+  async function changeBookmarkOrder(url, id, direction) {
+    const bookmarks = allBookmarks.value[url]?.bookmarks
+    if (!bookmarks?.[id]) return false
+
+    const sorted = Object.entries(bookmarks)
+      .map(([key, b]) => ({ id: key, ...b }))
+      .sort((a, b) => b.order - a.order)
+
+    const index = sorted.findIndex((b) => b.id === String(id))
+    if (index === -1) return false
+
+    const swapIndex = direction === 'up' ? index - 1 : index + 1
+    if (swapIndex < 0 || swapIndex >= sorted.length) return false
+
+    const currentOrder = bookmarks[id].order
+    bookmarks[id].order = bookmarks[sorted[swapIndex].id].order
+    bookmarks[sorted[swapIndex].id].order = currentOrder
+
+    await saveBookmarks()
+    return true
+  }
+
   async function deleteBookmark(url, id) {
     if (allBookmarks.value[url]?.bookmarks) {
       delete allBookmarks.value[url].bookmarks[id]
@@ -154,6 +176,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     updatePdfTitle,
     updateBookmarkTitle,
     updateBookmarkPage,
+    changeBookmarkOrder,
     deleteBookmark,
     deleteAllByUrl,
     deleteAll,

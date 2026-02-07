@@ -45,14 +45,14 @@ const handleTabClick = (index) => {
                 :class="{ 'active': activeTabIndex === 0 }"
                 @click="handleTabClick(0)"
             >
-                This pdf file
+                <span class="tab-label">This pdf file</span>
             </div>
             <div
                 class="text-item"
                 :class="{ 'active': activeTabIndex === 1 }"
                 @click="handleTabClick(1)"
             >
-                All pdf files
+                <span class="tab-label">All pdf files</span>
             </div>
         </div>
     </div>
@@ -101,10 +101,26 @@ const handleTabClick = (index) => {
         user-select: none;
     }
 
-    /* .text-item:not(.active):hover {
-        transition: background-color ease-in 0.1s;
-        background-color: #2f2f2f;
-    } */
+    .text-item:not(.active) .tab-label {
+        position: relative;
+    }
+
+    .text-item:not(.active) .tab-label::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0.1em;
+        background-color: var(--color-primary);
+        opacity: 0;
+        transition: opacity 300ms, transform 300ms;
+    }
+
+    .text-item:not(.active):hover .tab-label::after {
+        opacity: 1;
+        transform: translate3d(0, 0.2em, 0);
+    }
 
     .active-tab {
         background-color: var(--color-primary-container);

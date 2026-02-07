@@ -17,7 +17,6 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-surface-container);
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
+  border-left: 18px solid transparent;
   background-clip: padding-box;
 }

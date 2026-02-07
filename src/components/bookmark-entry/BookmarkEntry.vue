@@ -101,6 +101,11 @@ const handleDelete = () => {
     }
 
     .order-icon:hover {
+        border: 1px solid var(--color-primary);
+        border-radius: var(--border-radius);
+    }
+
+    .order-icon:hover {
         color: var(--color-primary);
     }
 

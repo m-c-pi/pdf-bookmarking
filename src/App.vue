@@ -1,21 +1,21 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import TabBar from './components/user-inputs/tab-bar/TabBar.vue';
-import TextInput from './components/user-inputs/text-input/TextInput.vue';
-import ThisPdfView from './views/ThisPdfView.vue/ThisPdfView.vue';
-import AllPdfView from './views/AllPdfView/AllPdfView.vue';
-import PdfFooter from './components/PdfFooter.vue';
-import { usePdfDataStore } from './stores/pdfDataStore';
+import { ref, onMounted } from 'vue'
+import TabBar from './components/user-inputs/tab-bar/TabBar.vue'
+import TextInput from './components/user-inputs/text-input/TextInput.vue'
+import ThisPdfView from './views/ThisPdfView.vue/ThisPdfView.vue'
+import AllPdfView from './views/AllPdfView/AllPdfView.vue'
+import PdfFooter from './components/PdfFooter.vue'
+import { usePdfDataStore } from './stores/pdfDataStore'
 
-const searchValue = ref('');
-const activeTab = ref(0);
-const isReady = ref(false);
-const pdfDataStore = usePdfDataStore();
+const searchValue = ref('')
+const activeTab = ref(0)
+const isReady = ref(false)
+const pdfDataStore = usePdfDataStore()
 
 onMounted(async () => {
-  await pdfDataStore.init();
-  isReady.value = true;
-});
+  await pdfDataStore.init()
+  isReady.value = true
+})
 </script>
 
 <template>
@@ -37,27 +37,27 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-  header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-sm)
-  }
+header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
 
-  header .search-wrapper {
-    height: var(--input-height-lg);
-  }
+header .search-wrapper {
+  height: var(--input-height-lg);
+}
 
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-lg);
-    height: 100%;
-    max-height: 100%;
-  }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  height: 100%;
+  max-height: 100%;
+}
 
-  .footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-  }
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
 </style>

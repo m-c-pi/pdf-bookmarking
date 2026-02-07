@@ -4,6 +4,7 @@ import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import pluginOxlint from 'eslint-plugin-oxlint'
 import skipFormatting from 'eslint-config-prettier/flat'
+import prettier from 'eslint-config-prettier'
 
 export default defineConfig([
   {
@@ -23,6 +24,16 @@ export default defineConfig([
 
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
+  prettier,
+
+  {
+    rules: {
+      indent: ['error', 2], // 2-space indentation
+      'max-len': ['error', { code: 100 }], // Max line length: 100 chars
+      'vue/multi-word-component-names': 'off',
+      'no-console': 'warn',
+    },
+  },
 
   ...pluginOxlint.configs['flat/recommended'],
 

@@ -39,10 +39,10 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await loadBookmarks()
   }
 
-    async function loadBookmarks() {
-        const result = await chrome.storage.local.get('bookmarksByUrl');
-        allBookmarks.value = result.bookmarksByUrl || {};
-    }
+  async function loadBookmarks() {
+    const result = await chrome.storage.local.get('bookmarksByUrl')
+    allBookmarks.value = result.bookmarksByUrl || {}
+  }
 
   function getBookmarksByUrl(url) {
     return computed(() => {
@@ -70,8 +70,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
 
   async function addBookmark(title, page) {
     if (isPdf.value == false) {
-        console.error('Current file is not a pdf!')
-        return false
+      return false
     }
 
     const validated = validateBookmark(title, page)
@@ -86,7 +85,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     allBookmarks.value[activeTabUrl.value].bookmarks[timestamp] = {
       title: validated.title,
       page: validated.page,
-      order: timestamp
+      order: timestamp,
     }
 
     await saveBookmarks()
@@ -144,19 +143,19 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await saveBookmarks()
   }
 
-    return { 
-        activeTabUrl, 
-        pdfTitle, 
-        isPdf, 
-        allBookmarks, 
-        getBookmarksByUrl, 
-        init, 
-        addBookmark, 
-        updatePdfTitle, 
-        updateBookmarkTitle,
-        updateBookmarkPage,
-        deleteBookmark, 
-        deleteAllByUrl, 
-        deleteAll 
-    }
+  return {
+    activeTabUrl,
+    pdfTitle,
+    isPdf,
+    allBookmarks,
+    getBookmarksByUrl,
+    init,
+    addBookmark,
+    updatePdfTitle,
+    updateBookmarkTitle,
+    updateBookmarkPage,
+    deleteBookmark,
+    deleteAllByUrl,
+    deleteAll,
+  }
 })

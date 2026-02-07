@@ -1,161 +1,174 @@
-
 <script setup>
 /* global chrome */
-import { ref, watch } from 'vue';
-import { ChevronUp24Regular, ChevronDown24Regular, Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
-import IconButton from '../user-inputs/IconButton.vue';
-import EditNameInput from '../user-inputs/text-input/EditNameInput.vue';
-import PageInput from '../user-inputs/PageInput.vue';
-import { usePdfDataStore } from '@/stores/pdfDataStore';
+import { ref, watch } from 'vue'
+import {
+  ChevronUp24Regular,
+  ChevronDown24Regular,
+  Edit24Regular,
+  Delete24Regular,
+  Checkmark24Regular,
+  Dismiss24Regular,
+} from '@vicons/fluent'
+import IconButton from '../user-inputs/IconButton.vue'
+import EditNameInput from '../user-inputs/text-input/EditNameInput.vue'
+import PageInput from '../user-inputs/PageInput.vue'
+import { usePdfDataStore } from '@/stores/pdfDataStore'
 
 const BookmarkState = {
-    EDITING: "editing",
-    DEFAULT: "default"
-};
+  EDITING: 'editing',
+  DEFAULT: 'default',
+}
 
 const props = defineProps({
-    bookmark: {
-        type: Object,
-        required: true
-    }
-});
+  bookmark: {
+    type: Object,
+    required: true,
+  },
+})
 
-const bookmarkState = ref(BookmarkState.DEFAULT);
-const title = ref(props.bookmark.title);
-const page = ref(props.bookmark.page);
+const bookmarkState = ref(BookmarkState.DEFAULT)
+const title = ref(props.bookmark.title)
+const page = ref(props.bookmark.page)
 
 const handleNavigate = () => {
-    chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` });
-};
+  chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` })
+}
 
 const handleEdit = () => {
-    bookmarkState.value = BookmarkState.EDITING;
-};
+  bookmarkState.value = BookmarkState.EDITING
+}
 
 const handleAccept = () => {
-    if (!title.value.trim()) {
-        handleCancel();
-        return;
-    }
-    pdfDataStore.updateBookmarkTitle(props.bookmark.url, props.bookmark.id, title.value.trim());
-    bookmarkState.value = BookmarkState.DEFAULT;
-};
+  if (!title.value.trim()) {
+    handleCancel()
+    return
+  }
+  pdfDataStore.updateBookmarkTitle(props.bookmark.url, props.bookmark.id, title.value.trim())
+  bookmarkState.value = BookmarkState.DEFAULT
+}
 
 const handleCancel = () => {
-    title.value = props.bookmark.title;
-    bookmarkState.value = BookmarkState.DEFAULT;
-};
+  title.value = props.bookmark.title
+  bookmarkState.value = BookmarkState.DEFAULT
+}
 
-const pdfDataStore = usePdfDataStore();
+const pdfDataStore = usePdfDataStore()
 
 const handleDelete = () => {
-    pdfDataStore.deleteBookmark(props.bookmark.url, props.bookmark.id);
-};
+  pdfDataStore.deleteBookmark(props.bookmark.url, props.bookmark.id)
+}
 
 watch(page, (newPage) => {
-    pdfDataStore.updateBookmarkPage(props.bookmark.url, props.bookmark.id, newPage);
-});
+  pdfDataStore.updateBookmarkPage(props.bookmark.url, props.bookmark.id, newPage)
+})
 </script>
 
 <template>
-    <div class="bookmark-entry-wrapper">
-        <div class="entry">
-            <div class="order-button-wrapper">
-                <ChevronUp24Regular class="order-icon" />
-                <ChevronDown24Regular class="order-icon" />
-            </div>
-            <div class="title-wrapper" @click="bookmarkState !== BookmarkState.EDITING && handleNavigate()">
-                <EditNameInput
-                    v-if="bookmarkState === BookmarkState.EDITING"
-                    v-model="title"
-                    @blur="handleCancel"
-                    @keydown.enter="handleAccept"
-                />
-                <div v-else class="title">{{ title }}</div>
-            </div>
-            <div class="action-button-wrapper" @click.stop>
-                <template v-if="bookmarkState === BookmarkState.EDITING">
-                    <IconButton :icon="Checkmark24Regular" @mousedown.prevent="handleAccept" />
-                    <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @mousedown.prevent="handleCancel" />
-                </template>
-                <template v-else>
-                    <IconButton :icon="Edit24Regular" @click="handleEdit" />
-                    <IconButton :icon="Delete24Regular" color="var(--color-decline)" @click="handleDelete" />
-                </template>
-            </div>
-        </div>
-        <PageInput v-model="page" />
+  <div class="bookmark-entry-wrapper">
+    <div class="entry">
+      <div class="order-button-wrapper">
+        <ChevronUp24Regular class="order-icon" />
+        <ChevronDown24Regular class="order-icon" />
+      </div>
+      <div
+        class="title-wrapper"
+        @click="bookmarkState !== BookmarkState.EDITING && handleNavigate()"
+      >
+        <EditNameInput
+          v-if="bookmarkState === BookmarkState.EDITING"
+          v-model="title"
+          @blur="handleCancel"
+          @keydown.enter="handleAccept"
+        />
+        <div v-else class="title">{{ title }}</div>
+      </div>
+      <div class="action-button-wrapper" @click.stop>
+        <template v-if="bookmarkState === BookmarkState.EDITING">
+          <IconButton :icon="Checkmark24Regular" @mousedown.prevent="handleAccept" />
+          <IconButton
+            :icon="Dismiss24Regular"
+            color="var(--color-decline)"
+            @mousedown.prevent="handleCancel"
+          />
+        </template>
+        <template v-else>
+          <IconButton :icon="Edit24Regular" @click="handleEdit" />
+          <IconButton :icon="Delete24Regular" color="var(--color-decline)" @click="handleDelete" />
+        </template>
+      </div>
     </div>
+    <PageInput v-model="page" />
+  </div>
 </template>
 
 <style scoped>
-    .bookmark-entry-wrapper {
-        height: var(--input-height-md);
-        max-width: 100%;
-        font-size: 14px;
-        display: flex;
-        flex-direction: row;
-        gap: var(--gap-md);
-    }
+.bookmark-entry-wrapper {
+  height: var(--input-height-md);
+  max-width: 100%;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap-md);
+}
 
-    .entry {
-        padding-inline: var(--padding-lg);
-        padding-block: var(--padding-md);
-        background-color: var(--color-surface-container);
-        border-radius: var(--border-radius);
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        flex: 1;
-        min-width: 0;
-        gap: var(--gap-md);
-    }
+.entry {
+  padding-inline: var(--padding-lg);
+  padding-block: var(--padding-md);
+  background-color: var(--color-surface-container);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: var(--gap-md);
+}
 
-    .entry:hover {
-        border: 1px solid var(--color-primary);
-    }
+.entry:hover {
+  border: 1px solid var(--color-primary);
+}
 
-    .order-button-wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+.order-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    .order-icon {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-        color: var(--color-on-surface-container-variant);
-    }
+.order-icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  color: var(--color-on-surface-container-variant);
+}
 
-    .order-icon:hover {
-        border: 1px solid var(--color-primary);
-        border-radius: var(--border-radius);
-    }
+.order-icon:hover {
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
+}
 
-    .order-icon:hover {
-        color: var(--color-primary);
-    }
+.order-icon:hover {
+  color: var(--color-primary);
+}
 
-    .title-wrapper {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        min-width: 0;
-    }
+.title-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  min-width: 0;
+}
 
-    .title {
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+.title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-    .action-button-wrapper {
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-    }
+.action-button-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
 </style>

@@ -9,10 +9,12 @@ import { usePdfDataStore } from './stores/pdfDataStore';
 
 const searchValue = ref('');
 const activeTab = ref(0);
+const isReady = ref(false);
 const pdfDataStore = usePdfDataStore();
 
-onMounted(() => {
-  pdfDataStore.init();
+onMounted(async () => {
+  await pdfDataStore.init();
+  isReady.value = true;
 });
 </script>
 
@@ -24,8 +26,10 @@ onMounted(() => {
         <TextInput v-model="searchValue" placeholder="Search" />
       </div>
     </header>
-    <ThisPdfView v-if="activeTab === 0" />
-    <AllPdfView v-else />
+    <template v-if="isReady">
+      <ThisPdfView v-if="activeTab === 0" />
+      <AllPdfView v-else />
+    </template>
     <div class="footer">
       <PdfFooter />
     </div>

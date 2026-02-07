@@ -1,17 +1,39 @@
 
 <script setup>
+    import { computed } from 'vue';
     import PdfTitle from '@/components/PdfTitle.vue';
     import BookmarkEntry from '@/components/bookmark-entry/BookmarkEntry.vue';
     import NewBookmarkInput from '@/components/NewBookmarkInput.vue';
+    import { usePdfDataStore } from '@/stores/pdfDataStore';
+
+    const pdfDataStore = usePdfDataStore();
+
+    const currentBookmarks = computed(() => {
+        const bookmarks = pdfDataStore.allBookmarks[pdfDataStore.activeTabUrl]?.bookmarks || {};
+        return Object.entries(bookmarks)
+            .map(([id, bookmark]) => ({ ...bookmark, id, url: pdfDataStore.activeTabUrl }))
+            .sort((a, b) => b.order - a.order);
+    });
+
+    const displayTitle = computed(() => {
+        return pdfDataStore.allBookmarks[pdfDataStore.activeTabUrl]?.pdfTitle || pdfDataStore.pdfTitle;
+    });
+
+    const onEditTitle = (newTitle) => {
+        pdfDataStore.updatePdfTitle(pdfDataStore.activeTabUrl, newTitle);
+    };
+
+    const onDelete = () => {
+        pdfDataStore.deleteAllByUrl(pdfDataStore.activeTabUrl);
+    };
 </script>
 
 <template>
-    <PdfTitle />
+    <PdfTitle :title="displayTitle" :onEdit="onEditTitle" :onDelete="onDelete" />
     <div class="bookmarks-list">
       <div class="bookmarks">
-        <!-- <BookmarkEntry /> -->
-        <div class="empty">-- No bookmarks saved --</div>
-
+        <BookmarkEntry v-for="bookmark in currentBookmarks" :key="bookmark.id" :bookmark="bookmark" />
+        <div v-if="currentBookmarks.length === 0" class="empty">-- No bookmarks saved --</div>
       </div>
       <div class="new-bookmark-wrapper">
         <NewBookmarkInput />

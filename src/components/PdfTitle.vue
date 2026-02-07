@@ -11,8 +11,27 @@ const PdfTitleState = {
     DEFAULT: "default"
 }
 
+const props = defineProps({
+    title: {
+        type: String,
+        default: ''
+    },
+    isEditable: {
+        type: Boolean,
+        default: true
+    },
+    onEdit: {
+        type: Function,
+        default: null
+    },
+    onDelete: {
+        type: Function,
+        default: null
+    }
+});
+
 const pdfTitleState = ref(PdfTitleState.DEFAULT);
-const title = ref('The catcher in the rye');
+const title = ref(props.title);
 const wrapperRef = ref(null);
 const shadowRef = ref(null);
 const useFitContent = ref(true);
@@ -22,6 +41,9 @@ const handleEdit = () => {
 };
 
 const handleAccept = () => {
+    if (props.onEdit) {
+        props.onEdit(title.value);
+    }
     pdfTitleState.value = PdfTitleState.DEFAULT;
 };
 
@@ -58,24 +80,24 @@ watch(pdfTitleState, (newValue) => {
 
 <template>
     <div class="shadow-wrapper">
-        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="pdfTitleState !== PdfTitleState.EDITING && handleEdit()">
+        <div ref="wrapperRef" class="pdf-title-wrapper" :class="{ 'fit-content': useFitContent }" @click="props.isEditable && pdfTitleState !== PdfTitleState.EDITING && handleEdit()">
             <EditNameInput v-if="pdfTitleState === PdfTitleState.EDITING" v-model="title" @blur="handleCancel" @keydown.enter="handleAccept" />
             <div v-else class="title">{{ title }}</div>
-            <div class="action-container" @click.stop>
+            <div v-if="props.isEditable" class="action-container" @click.stop>
                 <template v-if="pdfTitleState === PdfTitleState.EDITING">
                     <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
                     <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
                 </template>
                 <template v-else>
                     <IconButton :icon="Edit24Regular" @click="handleEdit" />
-                    <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
+                    <IconButton :icon="Delete24Regular" color="var(--color-decline)" @click="props.onDelete?.()" />
                 </template>
             </div>
         </div>
         <!-- To determine target animation size from edit mode -> non edit mode -->
         <div ref="shadowRef" class="pdf-title-wrapper shadow fit-content">
             <div class="title">{{ title }}</div>
-            <div class="action-container">
+            <div v-if="props.isEditable" class="action-container">
                 <IconButton :icon="Edit24Regular" />
                 <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
             </div>

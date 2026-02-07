@@ -23,6 +23,10 @@ const props = defineProps({
         type: Function,
         default: null
     },
+    onCancel: {
+        type: Function,
+        default: null
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -33,13 +37,17 @@ const handleInput = (event) => {
 
 const handleClear = () => {
     emit('update:modelValue', '');
+    if (props.onCancel) {
+        props.onCancel();
+    }
     inputRef.value?.focus();
 };
 
-const handleAccept = () => {
+const handleEnter = () => {
     if (props.onAccept) {
         props.onAccept(props.modelValue);
     }
+    inputRef.value?.blur();
 };
 </script>
 
@@ -52,9 +60,11 @@ const handleAccept = () => {
             :value="modelValue"
             :style="{ fontSize: fontSize + 'px' }"
             @input="handleInput"
+            @keydown.enter="handleEnter"
+            @keydown.esc="handleClear"
         >
         <div v-if="modelValue" class="button-container">
-            <IconButton v-if="props.onAccept" :icon="Checkmark24Regular" color="var(--color-accept)" @click="handleAccept" />
+            <IconButton v-if="props.onAccept" :icon="Checkmark24Regular" color="var(--color-accept)" @click="handleEnter" />
             <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleClear" />
         </div>
     </div>

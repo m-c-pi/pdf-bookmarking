@@ -4,6 +4,13 @@ import { ref } from 'vue';
 import { Add24Regular, Subtract24Regular } from '@vicons/fluent';
 import IconButton from './IconButton.vue';
 
+const props = defineProps({
+    onAccept: {
+        type: Function,
+        default: null
+    }
+});
+
 const model = defineModel({ type: Number, default: 1 });
 
 const pageInputRef = ref(null);
@@ -29,13 +36,23 @@ const handlePageBlur = () => {
 const incrementPage = () => {
     model.value = model.value + 1;
     pageInputRef.value.value = model.value;
+    focusPageInput();
 };
 
 const decrementPage = () => {
     if (model.value > 1) {
         model.value = model.value - 1;
         pageInputRef.value.value = model.value;
+        focusPageInput();
     }
+};
+
+const handleEnter = () => {
+    handlePageBlur();
+    if (props.onAccept) {
+        props.onAccept();
+    }
+    pageInputRef.value?.blur();
 };
 </script>
 
@@ -47,7 +64,7 @@ const decrementPage = () => {
             min="1"
             :value="model"
             @keydown="handlePageKeydown"
-            @keydown.enter="pageInputRef?.blur()"
+            @keydown.enter="handleEnter"
             @blur="handlePageBlur"
         >
         <div class="page-action-wrapper">

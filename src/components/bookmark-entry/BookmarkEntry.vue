@@ -1,19 +1,32 @@
 
 <script setup>
+/* global chrome */
 import { ref } from 'vue';
 import { ChevronUp24Regular, ChevronDown24Regular, Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
 import IconButton from '../user-inputs/IconButton.vue';
 import EditNameInput from '../user-inputs/text-input/EditNameInput.vue';
 import PageInput from '../user-inputs/PageInput.vue';
+import { usePdfDataStore } from '@/stores/pdfDataStore';
 
 const BookmarkState = {
     EDITING: "editing",
     DEFAULT: "default"
 };
 
+const props = defineProps({
+    bookmark: {
+        type: Object,
+        required: true
+    }
+});
+
 const bookmarkState = ref(BookmarkState.DEFAULT);
-const title = ref('Hier könnte ihr Titel stehen');
-const page = ref(1);
+const title = ref(props.bookmark.title);
+const page = ref(props.bookmark.page);
+
+const handleNavigate = () => {
+    chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` });
+};
 
 const handleEdit = () => {
     bookmarkState.value = BookmarkState.EDITING;
@@ -27,8 +40,10 @@ const handleCancel = () => {
     bookmarkState.value = BookmarkState.DEFAULT;
 };
 
+const pdfDataStore = usePdfDataStore();
+
 const handleDelete = () => {
-    // TODO: Implement delete functionality
+    pdfDataStore.deleteBookmark(props.bookmark.url, props.bookmark.id);
 };
 </script>
 
@@ -39,7 +54,7 @@ const handleDelete = () => {
                 <ChevronUp24Regular class="order-icon" />
                 <ChevronDown24Regular class="order-icon" />
             </div>
-            <div class="title-wrapper" @click="bookmarkState !== BookmarkState.EDITING && handleEdit()">
+            <div class="title-wrapper" @click="bookmarkState !== BookmarkState.EDITING && handleNavigate()">
                 <EditNameInput
                     v-if="bookmarkState === BookmarkState.EDITING"
                     v-model="title"
@@ -84,6 +99,10 @@ const handleDelete = () => {
         flex: 1;
         min-width: 0;
         gap: var(--gap-md);
+    }
+
+    .entry:hover {
+        border: 1px solid var(--color-primary);
     }
 
     .order-button-wrapper {

@@ -1,21 +1,34 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import TabBar from './components/user-inputs/tab-bar/TabBar.vue';
 import TextInput from './components/user-inputs/text-input/TextInput.vue';
 import ThisPdfView from './views/ThisPdfView.vue/ThisPdfView.vue';
+import AllPdfView from './views/AllPdfView/AllPdfView.vue';
+import PdfFooter from './components/PdfFooter.vue';
+import { usePdfDataStore } from './stores/pdfDataStore';
 
 const searchValue = ref('');
+const activeTab = ref(0);
+const pdfDataStore = usePdfDataStore();
+
+onMounted(() => {
+  pdfDataStore.init();
+});
 </script>
 
 <template>
   <div class="wrapper">
     <header>
-      <TabBar />
+      <TabBar @change="activeTab = $event" />
       <div class="search-wrapper">
         <TextInput v-model="searchValue" placeholder="Search" />
       </div>
     </header>
-    <ThisPdfView />
+    <ThisPdfView v-if="activeTab === 0" />
+    <AllPdfView v-else />
+    <div class="footer">
+      <PdfFooter />
+    </div>
   </div>
 </template>
 
@@ -36,5 +49,11 @@ const searchValue = ref('');
     gap: var(--gap-lg);
     height: 100%;
     max-height: 100%;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
   }
 </style>

@@ -3,29 +3,18 @@
     import PdfTitle from '@/components/PdfTitle.vue';
     import BookmarkEntry from '@/components/bookmark-entry/BookmarkEntry.vue';
     import NewBookmarkInput from '@/components/NewBookmarkInput.vue';
-    import PdfFooter from '@/components/PdfFooter.vue';
 </script>
 
 <template>
     <PdfTitle />
     <div class="bookmarks-list">
       <div class="bookmarks">
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
-        <BookmarkEntry />
+        <!-- <BookmarkEntry /> -->
+        <div class="empty">-- No bookmarks saved --</div>
 
       </div>
       <div class="new-bookmark-wrapper">
         <NewBookmarkInput />
-      </div>
-      <div class="footer">
-        <PdfFooter />
       </div>
     </div>
 </template>
@@ -52,11 +41,8 @@
     overflow: auto;
   }
 
-  .footer {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin-top: var(--gap-lg);
+  .empty {
+    font-size: 14px;
   }
+
 </style>

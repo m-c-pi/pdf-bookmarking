@@ -1,7 +1,7 @@
 
 <script setup>
 /* global chrome */
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { ChevronUp24Regular, ChevronDown24Regular, Edit24Regular, Delete24Regular, Checkmark24Regular, Dismiss24Regular } from '@vicons/fluent';
 import IconButton from '../user-inputs/IconButton.vue';
 import EditNameInput from '../user-inputs/text-input/EditNameInput.vue';
@@ -51,6 +51,10 @@ const pdfDataStore = usePdfDataStore();
 const handleDelete = () => {
     pdfDataStore.deleteBookmark(props.bookmark.url, props.bookmark.id);
 };
+
+watch(page, (newPage) => {
+    pdfDataStore.updateBookmarkPage(props.bookmark.url, props.bookmark.id, newPage);
+});
 </script>
 
 <template>
@@ -71,8 +75,8 @@ const handleDelete = () => {
             </div>
             <div class="action-button-wrapper" @click.stop>
                 <template v-if="bookmarkState === BookmarkState.EDITING">
-                    <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
-                    <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
+                    <IconButton :icon="Checkmark24Regular" @mousedown.prevent="handleAccept" />
+                    <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @mousedown.prevent="handleCancel" />
                 </template>
                 <template v-else>
                     <IconButton :icon="Edit24Regular" @click="handleEdit" />

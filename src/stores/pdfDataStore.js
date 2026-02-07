@@ -115,6 +115,18 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     return true
   }
 
+  async function updateBookmarkPage(url, id, newPage) {
+    const bookmark = allBookmarks.value[url]?.bookmarks?.[id]
+    if (!bookmark) return false
+
+    const validated = validateBookmark(bookmark.title, newPage)
+    if (!validated) return false
+
+    bookmark.page = validated.page
+    await saveBookmarks()
+    return true
+  }
+
   async function deleteBookmark(url, id) {
     if (allBookmarks.value[url]?.bookmarks) {
       delete allBookmarks.value[url].bookmarks[id]
@@ -141,7 +153,8 @@ export const usePdfDataStore = defineStore('pdfData', () => {
         init, 
         addBookmark, 
         updatePdfTitle, 
-        updateBookmarkTitle, 
+        updateBookmarkTitle,
+        updateBookmarkPage,
         deleteBookmark, 
         deleteAllByUrl, 
         deleteAll 

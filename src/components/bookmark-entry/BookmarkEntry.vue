@@ -69,7 +69,7 @@ watch(page, (newPage) => {
 
 <template>
   <div class="bookmark-entry-wrapper">
-    <div class="entry">
+    <div :class="['entry', { 'no-hover': pdfDataStore.isReorderingByDnd }]">
       <div class="order-button-wrapper">
         <ChevronUp24Regular class="order-icon" @click.stop="handleOrderChange('up')" />
         <ChevronDown24Regular class="order-icon" @click.stop="handleOrderChange('down')" />
@@ -128,7 +128,7 @@ watch(page, (newPage) => {
   gap: var(--gap-md);
 }
 
-.entry:hover {
+.entry:not(.no-hover):hover {
   border: 1px solid var(--color-primary);
 }
 
@@ -151,12 +151,12 @@ watch(page, (newPage) => {
   color: var(--color-on-surface-container-variant);
 }
 
-.order-icon:hover {
+.entry:not(.no-hover) .order-icon:hover {
   border: 1px solid var(--color-primary);
   border-radius: var(--border-radius);
 }
 
-.order-icon:hover {
+.entry:not(.no-hover) .order-icon:hover {
   color: var(--color-primary);
 }
 

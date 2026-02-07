@@ -24,6 +24,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   const pdfTitle = ref('')
   const isPdf = ref(false)
   const allBookmarks = ref({})
+  const isReorderingByDnd = ref(false)
 
   async function init() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
@@ -187,6 +188,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     pdfTitle,
     isPdf,
     allBookmarks,
+    isReorderingByDnd,
     getBookmarksByUrl,
     init,
     addBookmark,

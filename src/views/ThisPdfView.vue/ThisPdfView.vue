@@ -20,8 +20,12 @@ function initSortable() {
 
   sortableInstance = Sortable.create(bookmarksRef.value, {
     handle: '.order-button-wrapper',
-    animation: 150,
+    animation: 500,
+    onStart() {
+      pdfDataStore.isReorderingByDnd = true
+    },
     onEnd(evt) {
+      pdfDataStore.isReorderingByDnd = false
       const ids = currentBookmarks.value.map((b) => b.id)
       const [moved] = ids.splice(evt.oldIndex, 1)
       ids.splice(evt.newIndex, 0, moved)

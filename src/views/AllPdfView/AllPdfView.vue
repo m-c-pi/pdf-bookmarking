@@ -12,7 +12,7 @@ const pdfDataStore = usePdfDataStore()
       :key="url"
       class="bookmark-list-wrapper"
     >
-      <BookmarkList :url="url" />
+      <BookmarkList :url="url" showOrderButtons />
     </div>
   </div>
 </template>

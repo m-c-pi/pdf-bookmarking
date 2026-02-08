@@ -3,6 +3,8 @@ import { ref, watch, nextTick } from 'vue'
 import gsap from 'gsap'
 import IconButton from './user-inputs/IconButton.vue'
 import {
+  ChevronUp24Regular,
+  ChevronDown24Regular,
   Edit24Regular,
   Delete24Regular,
   Checkmark24Regular,
@@ -31,6 +33,14 @@ const props = defineProps({
   onDelete: {
     type: Function,
     default: null,
+  },
+  onOrderChange: {
+    type: Function,
+    default: null,
+  },
+  showOrderButtons: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -95,6 +105,10 @@ watch(pdfTitleState, (newValue) => {
       :class="{ 'fit-content': useFitContent }"
       @click="props.isEditable && pdfTitleState !== PdfTitleState.EDITING && handleEdit()"
     >
+      <div v-if="props.showOrderButtons" class="order-wrapper" @click.stop>
+        <ChevronUp24Regular class="order-icon" @click="props.onOrderChange?.('up')" />
+        <ChevronDown24Regular class="order-icon" @click="props.onOrderChange?.('down')" />
+      </div>
       <EditNameInput
         v-if="pdfTitleState === PdfTitleState.EDITING"
         v-model="title"
@@ -131,6 +145,9 @@ watch(pdfTitleState, (newValue) => {
 <style scoped>
 .shadow-wrapper {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap-sm);
 }
 
 .pdf-title-wrapper {
@@ -174,6 +191,26 @@ watch(pdfTitleState, (newValue) => {
   display: flex;
   flex-direction: row;
   height: 100%;
+}
+
+.order-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  color: var(--color-on-surface-container-variant);
+}
+
+.order-icon:hover {
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
 }
 </style>
 

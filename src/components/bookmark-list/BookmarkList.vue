@@ -8,6 +8,7 @@ import { usePdfDataStore } from '@/stores/pdfDataStore'
 
 const props = defineProps({
   url: { type: String, required: true },
+  showOrderButtons: { type: Boolean, default: false },
 })
 
 const bookmarks = computed(() => {
@@ -67,7 +68,7 @@ const onDelete = () => {
 </script>
 
 <template>
-  <PdfTitle :title="displayTitle" :isEditable="bookmarks.length > 0" :onEdit="onEditTitle" :onDelete="onDelete" />
+  <PdfTitle :title="displayTitle" :isEditable="bookmarks.length > 0" :onEdit="onEditTitle" :onDelete="onDelete" :showOrderButtons="props.showOrderButtons" />
   <div class="bookmarks-list">
     <div ref="bookmarksRef" class="bookmarks">
       <BookmarkEntry v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" />

@@ -147,7 +147,7 @@ watch(page, (newPage) => {
 .order-icon {
   width: 16px;
   height: 16px;
-  cursor: pointer;
+  cursor: grab;
   color: var(--color-on-surface-container-variant);
 }
 

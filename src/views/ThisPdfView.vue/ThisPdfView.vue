@@ -21,6 +21,7 @@ function initSortable() {
   sortableInstance = Sortable.create(bookmarksRef.value, {
     handle: '.order-button-wrapper',
     animation: 500,
+    dragClass: 'sortable-drag',
     onStart() {
       pdfDataStore.isReorderingByDnd = true
     },
@@ -96,5 +97,9 @@ const onDelete = () => {
 
 .empty {
   font-size: 14px;
+}
+
+.bookmarks :deep(.sortable-drag) {
+  opacity: 0;
 }
 </style>

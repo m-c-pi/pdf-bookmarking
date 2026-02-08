@@ -9,6 +9,7 @@ import { defineStore } from 'pinia'
 //         some_url_1: {
 //             pdfTitle: "awesome book",
 //             isHidden: false,
+//             order: timestamp,
 //             bookmarks: {
 //                 "timestamp_id": {
 //                     title: "Example",
@@ -81,7 +82,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     const timestamp = Date.now()
 
     if (!allBookmarks.value[url]) {
-      allBookmarks.value[url] = { pdfTitle: pdfTitle.value, bookmarks: {} }
+      allBookmarks.value[url] = { pdfTitle: pdfTitle.value, order: timestamp, bookmarks: {} }
     }
 
     allBookmarks.value[url].bookmarks[timestamp] = {
@@ -97,7 +98,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   async function updatePdfTitle(targetUrl, newTitle) {
     const trimmed = newTitle.trim() || pdfTitle.value
     if (!allBookmarks.value[targetUrl]) {
-      allBookmarks.value[targetUrl] = { pdfTitle: trimmed, bookmarks: {} }
+      allBookmarks.value[targetUrl] = { pdfTitle: trimmed, order: Date.now(), bookmarks: {} }
     } else {
       allBookmarks.value[targetUrl].pdfTitle = trimmed
     }
@@ -187,6 +188,30 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await saveBookmarks()
   }
 
+  const orderedUrls = computed(() => {
+    return Object.entries(allBookmarks.value)
+      .map(([url, data]) => ({ url, order: data.order ?? 0 }))
+      .sort((a, b) => b.order - a.order)
+      .map((entry) => entry.url)
+  })
+
+  async function changeUrlOrder(url, direction) {
+    const sorted = orderedUrls.value
+    const index = sorted.indexOf(url)
+    if (index === -1) return false
+
+    const swapIndex = direction === 'up' ? index - 1 : index + 1
+    if (swapIndex < 0 || swapIndex >= sorted.length) return false
+
+    const swapUrl = sorted[swapIndex]
+    const currentOrder = allBookmarks.value[url].order
+    allBookmarks.value[url].order = allBookmarks.value[swapUrl].order
+    allBookmarks.value[swapUrl].order = currentOrder
+
+    await saveBookmarks()
+    return true
+  }
+
   return {
     activeTabUrl,
     pdfTitle,
@@ -204,5 +229,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     deleteBookmark,
     deleteAllByUrl,
     deleteAll,
+    orderedUrls,
+    changeUrlOrder,
   }
 })

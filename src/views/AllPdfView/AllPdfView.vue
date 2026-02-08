@@ -8,11 +8,11 @@ const pdfDataStore = usePdfDataStore()
 <template>
   <div class="all-pdf-wrapper">
     <div
-      v-for="url in Object.keys(pdfDataStore.allBookmarks)"
+      v-for="url in pdfDataStore.orderedUrls"
       :key="url"
       class="bookmark-list-wrapper"
     >
-      <BookmarkList :url="url" showOrderButtons />
+      <BookmarkList :url="url" showOrderButtons :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)" />
     </div>
   </div>
 </template>

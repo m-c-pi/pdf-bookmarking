@@ -8,7 +8,6 @@ import { defineStore } from 'pinia'
 //     bookmarksByUrl: {
 //         some_url_1: {
 //             pdfTitle: "awesome book",
-//             hash: "some_hash",
 //             isHidden: false,
 //             bookmarks: {
 //                 "timestamp_id": {

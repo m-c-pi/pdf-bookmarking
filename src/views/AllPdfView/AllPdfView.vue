@@ -12,7 +12,7 @@ const pdfDataStore = usePdfDataStore()
       :key="url"
       class="bookmark-list-wrapper"
     >
-      <BookmarkList :url="url" showOrderButtons :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)" />
+      <BookmarkList :url="url" showOrderButtons showEyeButton :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)" />
     </div>
   </div>
 </template>

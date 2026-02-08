@@ -10,6 +10,7 @@ const props = defineProps({
   url: { type: String, required: true },
   showOrderButtons: { type: Boolean, default: false },
   onOrderChange: { type: Function, default: null },
+  showEyeButton: { type: Boolean, default: false },
 })
 
 const bookmarks = computed(() => {
@@ -66,11 +67,19 @@ const onEditTitle = (newTitle) => {
 const onDelete = () => {
   pdfDataStore.deleteAllByUrl(props.url)
 }
+
+const isHidden = computed(() => {
+  return !!pdfDataStore.allBookmarks[props.url]?.isHidden
+})
+
+const onToggleHidden = () => {
+  pdfDataStore.toggleHidden(props.url)
+}
 </script>
 
 <template>
-  <PdfTitle :title="displayTitle" :isEditable="bookmarks.length > 0" :onEdit="onEditTitle" :onDelete="onDelete" :showOrderButtons="props.showOrderButtons" :onOrderChange="props.onOrderChange" />
-  <div class="bookmarks-list">
+  <PdfTitle :title="displayTitle" :isEditable="bookmarks.length > 0" :onEdit="onEditTitle" :onDelete="onDelete" :showOrderButtons="props.showOrderButtons" :onOrderChange="props.onOrderChange" :showEyeButton="props.showEyeButton" :isHidden="isHidden" :onToggleHidden="onToggleHidden" />
+  <div v-if="!isHidden || !props.showEyeButton" class="bookmarks-list">
     <div ref="bookmarksRef" class="bookmarks">
       <BookmarkEntry v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" />
       <div v-if="bookmarks.length === 0" class="empty">-- No bookmarks saved --</div>

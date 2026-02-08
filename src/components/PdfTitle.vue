@@ -9,6 +9,8 @@ import {
   Delete24Regular,
   Checkmark24Regular,
   Dismiss24Regular,
+  Eye24Regular,
+  EyeOff24Regular,
 } from '@vicons/fluent'
 import EditNameInput from './user-inputs/text-input/EditNameInput.vue'
 
@@ -41,6 +43,18 @@ const props = defineProps({
   showOrderButtons: {
     type: Boolean,
     default: false,
+  },
+  showEyeButton: {
+    type: Boolean,
+    default: false,
+  },
+  isHidden: {
+    type: Boolean,
+    default: false,
+  },
+  onToggleHidden: {
+    type: Function,
+    default: null,
   },
 })
 
@@ -127,6 +141,11 @@ watch(pdfTitleState, (newValue) => {
             :icon="Delete24Regular"
             color="var(--color-decline)"
             @click="props.onDelete?.()"
+          />
+          <IconButton
+            v-if="props.showEyeButton"
+            :icon="props.isHidden ? EyeOff24Regular : Eye24Regular"
+            @click="props.onToggleHidden?.()"
           />
         </template>
       </div>

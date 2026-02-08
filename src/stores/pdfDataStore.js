@@ -183,6 +183,12 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await saveBookmarks()
   }
 
+  async function toggleHidden(url) {
+    if (!allBookmarks.value[url]) return
+    allBookmarks.value[url].isHidden = !allBookmarks.value[url].isHidden
+    await saveBookmarks()
+  }
+
   async function deleteAll() {
     allBookmarks.value = {}
     await saveBookmarks()
@@ -231,5 +237,6 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     deleteAll,
     orderedUrls,
     changeUrlOrder,
+    toggleHidden,
   }
 })

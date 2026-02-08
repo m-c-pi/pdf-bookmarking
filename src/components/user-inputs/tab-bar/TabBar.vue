@@ -8,6 +8,10 @@ const props = defineProps({
     // 1 = All pdf files
     default: 0,
   },
+  locked: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['change'])
@@ -29,13 +33,14 @@ const activeTabStyle = computed(() => {
 })
 
 const handleTabClick = (index) => {
+  if (props.locked) return
   activeTabIndex.value = index
   emit('change', index)
 }
 </script>
 
 <template>
-  <div class="tab-bar-wrapper">
+  <div class="tab-bar-wrapper" :class="{ locked }">
     <div class="active-tab" :style="activeTabStyle"></div>
     <div class="text-layer">
       <div class="text-item" :class="{ active: activeTabIndex === 0 }" @click="handleTabClick(0)">
@@ -125,6 +130,16 @@ const handleTabClick = (index) => {
   width: calc(50% - var(--padding-md) / 2);
   height: calc(100% - var(--padding-md));
   transition: transform 0.3s ease-in-out;
+}
+
+.locked {
+  cursor: default;
+}
+
+.locked .text-item:not(.active) {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
 }
 </style>
 

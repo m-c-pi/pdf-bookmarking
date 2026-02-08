@@ -14,19 +14,26 @@ const pdfDataStore = usePdfDataStore()
 
 onMounted(async () => {
   await pdfDataStore.init()
+  if (!pdfDataStore.isPdf) {
+    activeTab.value = 1
+  }
   isReady.value = true
 })
 </script>
 
 <template>
   <div class="wrapper">
-    <header>
-      <TabBar @change="activeTab = $event" />
-      <div class="search-wrapper">
-        <TextInput v-model="searchValue" placeholder="Search" />
-      </div>
-    </header>
     <template v-if="isReady">
+      <header>
+        <TabBar
+          :initial-tab-index="pdfDataStore.isPdf ? 0 : 1"
+          :locked="!pdfDataStore.isPdf"
+          @change="activeTab = $event"
+        />
+        <div class="search-wrapper">
+          <TextInput v-model="searchValue" placeholder="Search" />
+        </div>
+      </header>
       <ThisPdfView v-if="activeTab === 0" />
       <AllPdfView v-else />
     </template>

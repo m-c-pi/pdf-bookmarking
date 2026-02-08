@@ -52,6 +52,7 @@ const handleAccept = () => {
 }
 
 const handleCancel = () => {
+  title.value = props.title
   pdfTitleState.value = PdfTitleState.DEFAULT
 }
 
@@ -101,7 +102,7 @@ watch(pdfTitleState, (newValue) => {
         @keydown.enter="handleAccept"
       />
       <div v-else class="title">{{ title }}</div>
-      <div v-if="props.isEditable" class="action-container" @click.stop>
+      <div v-if="props.isEditable" class="action-container" @click.stop @mousedown.prevent>
         <template v-if="pdfTitleState === PdfTitleState.EDITING">
           <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
           <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />

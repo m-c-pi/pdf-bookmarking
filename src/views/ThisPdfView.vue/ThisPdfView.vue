@@ -26,7 +26,9 @@ function initSortable() {
       pdfDataStore.isReorderingByDnd = true
     },
     onEnd(evt) {
-      pdfDataStore.isReorderingByDnd = false
+      document.addEventListener('pointermove', () => {
+        pdfDataStore.isReorderingByDnd = false
+      }, { once: true })
       const ids = currentBookmarks.value.map((b) => b.id)
       const [moved] = ids.splice(evt.oldIndex, 1)
       ids.splice(evt.newIndex, 0, moved)

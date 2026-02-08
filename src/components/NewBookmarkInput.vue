@@ -4,6 +4,10 @@ import PageInput from './user-inputs/PageInput.vue'
 import TextInput from './user-inputs/text-input/TextInput.vue'
 import { usePdfDataStore } from '@/stores/pdfDataStore'
 
+const props = defineProps({
+  url: { type: String, default: '' },
+})
+
 const pdfDataStore = usePdfDataStore()
 const bookmarkTitle = ref('')
 const page = ref(1)
@@ -14,7 +18,7 @@ const resetPage = () => {
 
 const onAccept = async (value) => {
   if (!value.trim()) return
-  await pdfDataStore.addBookmark(value.trim(), page.value)
+  await pdfDataStore.addBookmark(value.trim(), page.value, props.url || undefined)
   bookmarkTitle.value = ''
   resetPage()
 }

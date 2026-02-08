@@ -69,7 +69,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     return { title: trimmedTitle, url: trimmedUrl, page }
   }
 
-  async function addBookmark(title, page) {
+  async function addBookmark(title, page, url = activeTabUrl.value) {
     if (isPdf.value == false) {
       return false
     }
@@ -79,11 +79,11 @@ export const usePdfDataStore = defineStore('pdfData', () => {
 
     const timestamp = Date.now()
 
-    if (!allBookmarks.value[activeTabUrl.value]) {
-      allBookmarks.value[activeTabUrl.value] = { pdfTitle: pdfTitle.value, bookmarks: {} }
+    if (!allBookmarks.value[url]) {
+      allBookmarks.value[url] = { pdfTitle: pdfTitle.value, bookmarks: {} }
     }
 
-    allBookmarks.value[activeTabUrl.value].bookmarks[timestamp] = {
+    allBookmarks.value[url].bookmarks[timestamp] = {
       title: validated.title,
       page: validated.page,
       order: timestamp,
@@ -169,6 +169,9 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   async function deleteBookmark(url, id) {
     if (allBookmarks.value[url]?.bookmarks) {
       delete allBookmarks.value[url].bookmarks[id]
+      if (Object.keys(allBookmarks.value[url].bookmarks).length === 0) {
+        delete allBookmarks.value[url]
+      }
       await saveBookmarks()
     }
   }

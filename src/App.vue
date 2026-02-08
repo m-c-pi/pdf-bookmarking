@@ -6,6 +6,7 @@ import ThisPdfView from './views/ThisPdfView.vue/ThisPdfView.vue'
 import AllPdfView from './views/AllPdfView/AllPdfView.vue'
 import PdfFooter from './components/PdfFooter.vue'
 import { usePdfDataStore } from './stores/pdfDataStore'
+import ConfirmationModal from './components/modals/ConfirmationModal.vue'
 
 const searchValue = ref('')
 const activeTab = ref(0)
@@ -37,6 +38,7 @@ onMounted(async () => {
       <ThisPdfView v-if="activeTab === 0" />
       <AllPdfView v-else />
     </template>
+    <ConfirmationModal />
     <div class="footer">
       <PdfFooter />
     </div>
@@ -60,6 +62,7 @@ header .search-wrapper {
   gap: var(--gap-lg);
   height: 100%;
   max-height: 100%;
+  position: relative;
 }
 
 .footer {

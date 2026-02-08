@@ -67,7 +67,7 @@ const onDelete = () => {
 </script>
 
 <template>
-  <PdfTitle :title="displayTitle" :onEdit="onEditTitle" :onDelete="onDelete" />
+  <PdfTitle :title="displayTitle" :isEditable="bookmarks.length > 0" :onEdit="onEditTitle" :onDelete="onDelete" />
   <div class="bookmarks-list">
     <div ref="bookmarksRef" class="bookmarks">
       <BookmarkEntry v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark" />

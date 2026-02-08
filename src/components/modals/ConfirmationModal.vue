@@ -1,4 +1,6 @@
 <script setup>
+import { ref, watch } from 'vue'
+import gsap from 'gsap'
 import { Info24Regular, Dismiss24Regular } from '@vicons/fluent'
 import IconButton from '../user-inputs/IconButton.vue'
 import FilledButton from '../user-inputs/FilledButton.vue'
@@ -6,17 +8,55 @@ import OutlinedButton from '../user-inputs/OutlinedButton.vue'
 import { useModalStore } from '../../stores/modalStore'
 
 const modalStore = useModalStore()
+const isRendered = ref(false)
+const wrapperRef = ref(null)
+const modalRef = ref(null)
+
+function animateIn() {
+  isRendered.value = true
+  requestAnimationFrame(() => {
+    gsap.fromTo(wrapperRef.value, { opacity: 0 }, { opacity: 1, duration: 0.2 })
+    gsap.fromTo(modalRef.value, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
+  })
+}
+
+function animateOut() {
+  gsap.to(wrapperRef.value, { opacity: 0, duration: 0.2 })
+  gsap.to(modalRef.value, {
+    opacity: 0,
+    y: 20,
+    duration: 0.2,
+    ease: 'power2.in',
+    onComplete: () => {
+      isRendered.value = false
+    },
+  })
+}
+
+watch(() => modalStore.isVisible, (visible) => {
+  if (visible) {
+    animateIn()
+  } else {
+    animateOut()
+  }
+})
+
+const onWrapperClick = (e) => {
+  if (e.target === wrapperRef.value) {
+    modalStore.hide()
+  }
+}
 </script>
 
 <template>
-  <div v-if="modalStore.isVisible" class="modal-wrapper">
-    <div class="modal">
+  <div v-if="isRendered" ref="wrapperRef" class="modal-wrapper" @click="onWrapperClick">
+    <div ref="modalRef" class="modal">
       <IconButton :icon="Dismiss24Regular" class="close-button" @click="modalStore.hide()" />
       <h1><Info24Regular class="info-icon" /> {{ modalStore.heading }}</h1>
       <p>{{ modalStore.description }}</p>
       <div class="action-wrapper">
-        <OutlinedButton>Cancel</OutlinedButton>
-        <FilledButton>Confirm</FilledButton>
+        <OutlinedButton @click="modalStore.hide()">Cancel</OutlinedButton>
+        <FilledButton @click="modalStore.confirm()">Confirm</FilledButton>
       </div>
     </div>
   </div>

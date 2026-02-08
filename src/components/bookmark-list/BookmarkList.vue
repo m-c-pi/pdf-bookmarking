@@ -5,6 +5,7 @@ import PdfTitle from '@/components/PdfTitle.vue'
 import BookmarkEntry from '@/components/bookmark-entry/BookmarkEntry.vue'
 import NewBookmarkInput from '@/components/NewBookmarkInput.vue'
 import { usePdfDataStore } from '@/stores/pdfDataStore'
+import { useModalStore } from '@/stores/modalStore'
 
 const props = defineProps({
   url: { type: String, required: true },
@@ -18,6 +19,7 @@ const bookmarks = computed(() => {
 })
 
 const pdfDataStore = usePdfDataStore()
+const modalStore = useModalStore()
 const bookmarksRef = ref(null)
 let sortableInstance = null
 
@@ -65,7 +67,11 @@ const onEditTitle = (newTitle) => {
 }
 
 const onDelete = () => {
-  pdfDataStore.deleteAllByUrl(props.url)
+  modalStore.show(
+    'Delete all bookmarks',
+    `Are you sure you want to delete all bookmarks for "${displayTitle.value}"?`,
+    () => pdfDataStore.deleteAllByUrl(props.url),
+  )
 }
 
 const isHidden = computed(() => {

@@ -55,7 +55,7 @@ onMounted(() => {
   width: 100%;
   min-width: 0;
   height: 100%;
-  background-color: var(--color-surface-container-low);
+  background-color: transparent;
   border: none;
   outline: none;
   margin: 0;

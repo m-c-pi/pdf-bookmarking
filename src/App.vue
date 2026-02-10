@@ -7,6 +7,7 @@ import AllPdfView from './views/AllPdfView/AllPdfView.vue'
 import PdfFooter from './components/PdfFooter.vue'
 import { usePdfDataStore } from './stores/pdfDataStore'
 import ConfirmationModal from './components/modals/ConfirmationModal.vue'
+import ErrorModal from './components/modals/ErrorModal.vue'
 
 const activeTab = ref(0)
 const isReady = ref(false)
@@ -38,6 +39,7 @@ onMounted(async () => {
       <AllPdfView v-else />
     </template>
     <ConfirmationModal />
+    <ErrorModal />
     <div class="footer">
       <PdfFooter />
     </div>

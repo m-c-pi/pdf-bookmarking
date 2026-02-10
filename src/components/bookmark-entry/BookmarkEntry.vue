@@ -13,6 +13,7 @@ import IconButton from '../user-inputs/IconButton.vue'
 import EditNameInput from '../user-inputs/text-input/EditNameInput.vue'
 import PageInput from '../user-inputs/PageInput.vue'
 import { usePdfDataStore } from '@/stores/pdfDataStore'
+import { useErrorModalStore } from '@/stores/errorModalStore'
 
 const BookmarkState = {
   EDITING: 'editing',
@@ -30,8 +31,21 @@ const bookmarkState = ref(BookmarkState.DEFAULT)
 const title = ref(props.bookmark.title)
 const page = ref(props.bookmark.page)
 
-const handleNavigate = () => {
-  chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` })
+const errorModalStore = useErrorModalStore()
+
+const handleNavigate = async () => {
+  try {
+    await chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` })
+  } catch {
+    errorModalStore.show(
+      'Unable to open file',
+      'Chrome blocked access to a local file URL. To fix this, open the extension settings and enable "Allow access to file URLs".',
+      {
+        actionLabel: 'Open Settings',
+        onAction: () => chrome.tabs.create({ url: `chrome://extensions/?id=${chrome.runtime.id}` }),
+      },
+    )
+  }
 }
 
 const handleEdit = () => {

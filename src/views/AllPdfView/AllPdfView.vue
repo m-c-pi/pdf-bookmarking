@@ -7,12 +7,14 @@ const pdfDataStore = usePdfDataStore()
 
 <template>
   <div class="all-pdf-wrapper">
-    <div
-      v-for="url in pdfDataStore.orderedUrls"
-      :key="url"
-      class="bookmark-list-wrapper"
-    >
-      <BookmarkList :url="url" showOrderButtons showEyeButton :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)" />
+    <div v-if="pdfDataStore.orderedUrls.length === 0" class="no-bookmarks">No bookmarks found</div>
+    <div v-for="url in pdfDataStore.orderedUrls" :key="url" class="bookmark-list-wrapper">
+      <BookmarkList
+        :url="url"
+        showOrderButtons
+        showEyeButton
+        :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)"
+      />
     </div>
   </div>
 </template>
@@ -25,6 +27,14 @@ const pdfDataStore = usePdfDataStore()
   min-height: 0;
   overflow: auto;
   gap: var(--gap-lg);
+}
+
+.no-bookmarks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  font-size: 14px;
 }
 
 .bookmark-list-wrapper {

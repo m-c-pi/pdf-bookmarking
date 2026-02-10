@@ -11,7 +11,7 @@
   --color-on-surface-container: #000000;
   --color-surface-container: #f7f7fa;
   --color-surface-container-low: #ffffff;
-  --color-on-surface-container-variant: #d1d1d1;
+  --color-on-surface-container-variant: #bebebe;
   --color-decline: #d32f2f;
 
   --padding-lg: 22px;
@@ -39,7 +39,7 @@
   --color-on-surface-container: #dddddd;
   --color-surface-container: #18181c;
   --color-surface-container-low: #18181c;
-  --color-on-surface-container-variant: #2d2d30;
+  --color-on-surface-container-variant: #505056;
   --color-decline: #ef5350;
 }
 
@@ -57,7 +57,7 @@
     --color-on-surface-container: #dddddd;
     --color-surface-container: #18181c;
     --color-surface-container-low: #18181c;
-    --color-on-surface-container-variant: #2d2d30;
+    --color-on-surface-container-variant: #505056;
     --color-decline: #ef5350;
   }
 }

@@ -1,6 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
-import gsap from 'gsap'
+import { ref } from 'vue'
 import IconButton from './user-inputs/IconButton.vue'
 import {
   ChevronUp24Regular,
@@ -60,9 +59,6 @@ const props = defineProps({
 
 const pdfTitleState = ref(PdfTitleState.DEFAULT)
 const title = ref(props.title)
-const wrapperRef = ref(null)
-const shadowRef = ref(null)
-const useFitContent = ref(true)
 
 const handleEdit = () => {
   pdfTitleState.value = PdfTitleState.EDITING
@@ -80,43 +76,12 @@ const handleCancel = () => {
   pdfTitleState.value = PdfTitleState.DEFAULT
 }
 
-watch(pdfTitleState, (newValue) => {
-  if (newValue === PdfTitleState.EDITING && wrapperRef.value) {
-    const currentWidth = wrapperRef.value.offsetWidth
-    gsap.set(wrapperRef.value, { maxWidth: currentWidth })
-    useFitContent.value = false
-
-    nextTick(() => {
-      gsap.to(wrapperRef.value, { maxWidth: 300, duration: 1, ease: 'elastic.out(1, 0.5)' })
-    })
-  } else if (newValue === PdfTitleState.DEFAULT && wrapperRef.value && shadowRef.value) {
-    const targetWidth = shadowRef.value.offsetWidth
-
-    nextTick(() => {
-      gsap.fromTo(
-        wrapperRef.value,
-        { maxWidth: 300 },
-        {
-          maxWidth: targetWidth,
-          duration: 0.3,
-          ease: 'power2.out',
-          onComplete: () => {
-            gsap.set(wrapperRef.value, { clearProps: 'maxWidth' })
-            useFitContent.value = true
-          },
-        },
-      )
-    })
-  }
-})
 </script>
 
 <template>
   <div class="shadow-wrapper">
     <div
-      ref="wrapperRef"
-      class="pdf-title-wrapper"
-      :class="{ 'fit-content': useFitContent }"
+      class="pdf-title-wrapper fit-content"
       @click="props.isEditable && pdfTitleState !== PdfTitleState.EDITING && handleEdit()"
     >
       <div v-if="props.showOrderButtons" class="order-wrapper" @click.stop>
@@ -150,14 +115,6 @@ watch(pdfTitleState, (newValue) => {
         </template>
       </div>
     </div>
-    <!-- To determine target animation size from edit mode -> non edit mode -->
-    <div ref="shadowRef" class="pdf-title-wrapper shadow fit-content">
-      <div class="title">{{ title }}</div>
-      <div v-if="props.isEditable" class="action-container">
-        <IconButton :icon="Edit24Regular" />
-        <IconButton :icon="Delete24Regular" color="var(--color-decline)" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -183,14 +140,6 @@ watch(pdfTitleState, (newValue) => {
   font-size: 14px;
   max-width: calc(300px + 2 * var(--padding-lg));
   border-radius: var(--border-radius);
-}
-
-.shadow {
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .pdf-title-wrapper.fit-content {

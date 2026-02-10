@@ -126,10 +126,11 @@ watch(page, (newPage) => {
   flex: 1;
   min-width: 0;
   gap: var(--gap-md);
+  border: 1px solid transparent;
 }
 
 .entry:not(.no-hover):hover {
-  border: 1px solid var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .order-button-wrapper {
@@ -149,11 +150,12 @@ watch(page, (newPage) => {
   height: 16px;
   cursor: grab;
   color: var(--color-on-surface-container-variant);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
 }
 
 .entry:not(.no-hover) .order-icon:hover {
-  border: 1px solid var(--color-primary);
-  border-radius: var(--border-radius);
+  border-color: var(--color-primary);
 }
 
 .entry:not(.no-hover) .order-icon:hover {

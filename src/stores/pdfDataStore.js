@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 // Example structure
 //
 // {
+//     version: "0.0.0.3",
 //     bookmarksByUrl: {
 //         some_url_1: {
 //             pdfTitle: "awesome book",
@@ -73,6 +74,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
 
     await convertLegacy()
     await loadBookmarks()
+    await chrome.storage.local.set({ version: chrome.runtime.getManifest().version })
   }
 
   async function loadBookmarks() {

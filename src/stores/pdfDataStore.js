@@ -29,6 +29,37 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   const isReorderingByDnd = ref(false)
   const searchValue = ref('')
 
+  async function convertLegacy() {
+    const syncData = await chrome.storage.sync.get(null)
+    const legacyBookmarks = Object.entries(syncData).filter(
+      ([, value]) => value && typeof value === 'object' && 'url' in value && 'page' in value && 'title' in value
+    )
+    if (legacyBookmarks.length === 0) return
+
+    await chrome.storage.local.remove('bookmarksByUrl')
+
+    const bookmarksByUrl = {}
+    for (const [id, bookmark] of legacyBookmarks) {
+      const url = bookmark.url
+      if (!bookmarksByUrl[url]) {
+        const filename = url.split('/').pop() || ''
+        const pdfName = decodeURIComponent(filename.replace(/\.pdf$/i, '')).trim()
+        bookmarksByUrl[url] = { pdfTitle: pdfName, order: bookmark.timestamp, bookmarks: {} }
+      }
+      bookmarksByUrl[url].bookmarks[id] = {
+        title: bookmark.title,
+        page: bookmark.page,
+        order: bookmark.timestamp,
+      }
+      if (bookmark.timestamp > bookmarksByUrl[url].order) {
+        bookmarksByUrl[url].order = bookmark.timestamp
+      }
+    }
+
+    await chrome.storage.local.set({ bookmarksByUrl })
+    await chrome.storage.sync.clear()
+  }
+
   async function init() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
     if (!tab?.url) return
@@ -40,6 +71,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     const filename = urlWithoutHash.split('/').pop() || ''
     pdfTitle.value = decodeURIComponent(filename.replace(/\.pdf$/i, '')).trim()
 
+    await convertLegacy()
     await loadBookmarks()
   }
 

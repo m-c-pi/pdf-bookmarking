@@ -1,4 +1,4 @@
 # TODO:
 
-- Download sync storage (Legacy)
-- Footer
+- Test legacy sync
+- Allow updating file url

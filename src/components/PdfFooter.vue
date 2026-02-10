@@ -1,12 +1,14 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import IconButton from './user-inputs/IconButton.vue'
-import {
-  WeatherMoon24Regular,
-  Info24Regular,
-  CloudSync24Regular,
-  Code24Regular,
-} from '@vicons/fluent'
+import { WeatherMoon24Regular, ShareAndroid24Regular, Code24Regular } from '@vicons/fluent'
+
+const openGithub = () => window.open('https://github.com/pascal-iding/pdf-bookmarking', '_blank')
+const share = () =>
+  window.open(
+    'https://chromewebstore.google.com/detail/superior-pdf-bookmarks/cmbcjkejdebbengdbindhfofkkendcon?hl=de',
+    '_blank',
+  )
 
 const theme = ref(localStorage.getItem('theme') || 'system')
 
@@ -28,10 +30,9 @@ const toggleTheme = () => {
 
 <template>
   <div class="footer-wrapper">
-    <IconButton :icon="Code24Regular" />
+    <IconButton :icon="Code24Regular" @click="openGithub" />
     <IconButton :icon="WeatherMoon24Regular" @click="toggleTheme" />
-    <IconButton :icon="Info24Regular" />
-    <IconButton :icon="CloudSync24Regular" />
+    <IconButton :icon="ShareAndroid24Regular" @click="share" />
   </div>
 </template>
 

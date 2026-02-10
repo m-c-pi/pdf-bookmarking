@@ -8,7 +8,6 @@ import PdfFooter from './components/PdfFooter.vue'
 import { usePdfDataStore } from './stores/pdfDataStore'
 import ConfirmationModal from './components/modals/ConfirmationModal.vue'
 
-const searchValue = ref('')
 const activeTab = ref(0)
 const isReady = ref(false)
 const pdfDataStore = usePdfDataStore()
@@ -32,7 +31,7 @@ onMounted(async () => {
           @change="activeTab = $event"
         />
         <div class="search-wrapper">
-          <TextInput v-model="searchValue" placeholder="Search" />
+          <TextInput v-model="pdfDataStore.searchValue" placeholder="Search" />
         </div>
       </header>
       <ThisPdfView v-if="activeTab === 0" />

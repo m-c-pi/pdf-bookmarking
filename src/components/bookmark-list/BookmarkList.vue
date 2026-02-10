@@ -14,12 +14,20 @@ const props = defineProps({
   showEyeButton: { type: Boolean, default: false },
 })
 
-const bookmarks = computed(() => {
+const pdfDataStore = usePdfDataStore()
+const modalStore = useModalStore()
+
+const allBookmarksForUrl = computed(() => {
   return pdfDataStore.getBookmarksByUrl(props.url).value
 })
 
-const pdfDataStore = usePdfDataStore()
-const modalStore = useModalStore()
+const bookmarks = computed(() => {
+  const term = pdfDataStore.searchValue.trim().toLowerCase()
+  if (!term) return allBookmarksForUrl.value
+  return allBookmarksForUrl.value.filter((b) =>
+    b.title.toLowerCase().includes(term),
+  )
+})
 const bookmarksRef = ref(null)
 let sortableInstance = null
 

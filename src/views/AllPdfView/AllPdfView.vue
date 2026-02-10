@@ -1,14 +1,27 @@
 <script setup>
+import { computed } from 'vue'
 import BookmarkList from '@/components/bookmark-list/BookmarkList.vue'
 import { usePdfDataStore } from '@/stores/pdfDataStore'
 
 const pdfDataStore = usePdfDataStore()
+
+const filteredUrls = computed(() => {
+  const term = pdfDataStore.searchValue.trim().toLowerCase()
+  if (!term) return pdfDataStore.orderedUrls
+
+  return pdfDataStore.orderedUrls.filter((url) => {
+    const bookmarks = pdfDataStore.allBookmarks[url]?.bookmarks || {}
+    return Object.values(bookmarks).some((b) =>
+      b.title.toLowerCase().includes(term),
+    )
+  })
+})
 </script>
 
 <template>
   <div class="all-pdf-wrapper">
-    <div v-if="pdfDataStore.orderedUrls.length === 0" class="no-bookmarks">No bookmarks found</div>
-    <div v-for="url in pdfDataStore.orderedUrls" :key="url" class="bookmark-list-wrapper">
+    <div v-if="filteredUrls.length === 0" class="no-bookmarks">No bookmarks found</div>
+    <div v-for="url in filteredUrls" :key="url" class="bookmark-list-wrapper">
       <BookmarkList
         :url="url"
         showOrderButtons

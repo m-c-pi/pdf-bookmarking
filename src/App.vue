@@ -29,7 +29,7 @@ onMounted(async () => {
         <TabBar
           :initial-tab-index="pdfDataStore.isPdf ? 0 : 1"
           :locked="!pdfDataStore.isPdf"
-          @change="activeTab = $event"
+          @change="activeTab = $event; pdfDataStore.searchValue = ''"
         />
         <div class="search-wrapper">
           <TextInput v-model="pdfDataStore.searchValue" placeholder="Search" />

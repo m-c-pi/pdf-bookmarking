@@ -26,6 +26,7 @@ const filteredUrls = computed(() => {
         :url="url"
         showOrderButtons
         showEyeButton
+        showFileButton
         :onOrderChange="(dir) => pdfDataStore.changeUrlOrder(url, dir)"
       />
     </div>

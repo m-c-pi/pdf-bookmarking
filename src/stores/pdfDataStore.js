@@ -236,6 +236,17 @@ export const usePdfDataStore = defineStore('pdfData', () => {
       .map((entry) => entry.url)
   })
 
+  async function updatePdfUrl(oldUrl, newUrl) {
+    const trimmed = newUrl.trim()
+    if (!trimmed || trimmed === oldUrl) return false
+    if (allBookmarks.value[trimmed]) return false
+
+    allBookmarks.value[trimmed] = allBookmarks.value[oldUrl]
+    delete allBookmarks.value[oldUrl]
+    await saveBookmarks()
+    return true
+  }
+
   async function changeUrlOrder(url, direction) {
     const sorted = orderedUrls.value
     const index = sorted.indexOf(url)
@@ -272,6 +283,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     deleteAll,
     orderedUrls,
     changeUrlOrder,
+    updatePdfUrl,
     toggleHidden,
     searchValue,
   }

@@ -10,11 +10,13 @@ import {
   Dismiss24Regular,
   Eye24Regular,
   EyeOff24Regular,
+  Document24Regular,
 } from '@vicons/fluent'
 import EditNameInput from './user-inputs/text-input/EditNameInput.vue'
 
 const PdfTitleState = {
   EDITING: 'editing',
+  EDITING_URL: 'editing_url',
   DEFAULT: 'default',
 }
 
@@ -23,11 +25,19 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  url: {
+    type: String,
+    default: '',
+  },
   isEditable: {
     type: Boolean,
     default: true,
   },
   onEdit: {
+    type: Function,
+    default: null,
+  },
+  onEditUrl: {
     type: Function,
     default: null,
   },
@@ -40,6 +50,10 @@ const props = defineProps({
     default: null,
   },
   showOrderButtons: {
+    type: Boolean,
+    default: false,
+  },
+  showFileButton: {
     type: Boolean,
     default: false,
   },
@@ -59,73 +73,90 @@ const props = defineProps({
 
 const pdfTitleState = ref(PdfTitleState.DEFAULT)
 const title = ref(props.title)
+const url = ref(props.url)
 
 const handleEdit = () => {
   pdfTitleState.value = PdfTitleState.EDITING
 }
 
+const handleEditUrl = () => {
+  pdfTitleState.value = PdfTitleState.EDITING_URL
+}
+
 const handleAccept = () => {
-  if (props.onEdit) {
-    props.onEdit(title.value)
+  if (pdfTitleState.value === PdfTitleState.EDITING_URL) {
+    if (!url.value.trim().toLowerCase().endsWith('.pdf')) {
+      handleCancel()
+      return
+    }
+    if (props.onEditUrl) {
+      props.onEditUrl(url.value)
+    }
+  } else {
+    if (props.onEdit) {
+      props.onEdit(title.value)
+    }
   }
   pdfTitleState.value = PdfTitleState.DEFAULT
 }
 
 const handleCancel = () => {
   title.value = props.title
+  url.value = props.url
   pdfTitleState.value = PdfTitleState.DEFAULT
 }
-
 </script>
 
 <template>
-  <div class="shadow-wrapper">
-    <div
-      class="pdf-title-wrapper fit-content"
-      @click="props.isEditable && pdfTitleState !== PdfTitleState.EDITING && handleEdit()"
-    >
-      <div v-if="props.showOrderButtons" class="order-wrapper" @click.stop>
-        <ChevronUp24Regular class="order-icon" @click="props.onOrderChange?.('up')" />
-        <ChevronDown24Regular class="order-icon" @click="props.onOrderChange?.('down')" />
-      </div>
-      <EditNameInput
-        v-if="pdfTitleState === PdfTitleState.EDITING"
-        v-model="title"
-        @blur="handleCancel"
-        @keydown.enter="handleAccept"
-      />
-      <div v-else class="title">{{ title }}</div>
-      <div v-if="props.isEditable" class="action-container" @click.stop @mousedown.prevent>
-        <template v-if="pdfTitleState === PdfTitleState.EDITING">
-          <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
-          <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
-        </template>
-        <template v-else>
-          <IconButton :icon="Edit24Regular" @click="handleEdit" />
-          <IconButton
-            :icon="Delete24Regular"
-            color="var(--color-decline)"
-            @click="props.onDelete?.()"
-          />
-          <IconButton
-            v-if="props.showEyeButton"
-            :icon="props.isHidden ? EyeOff24Regular : Eye24Regular"
-            @click="props.onToggleHidden?.()"
-          />
-        </template>
-      </div>
+  <div
+    class="pdf-title-wrapper fit-content"
+    @click="props.isEditable && pdfTitleState === PdfTitleState.DEFAULT && handleEdit()"
+  >
+    <div v-if="props.showOrderButtons" class="order-wrapper" @click.stop>
+      <ChevronUp24Regular class="order-icon" @click="props.onOrderChange?.('up')" />
+      <ChevronDown24Regular class="order-icon" @click="props.onOrderChange?.('down')" />
+    </div>
+    <EditNameInput
+      v-if="pdfTitleState === PdfTitleState.EDITING"
+      v-model="title"
+      @blur="handleCancel"
+      @keydown.enter="handleAccept"
+    />
+    <EditNameInput
+      v-else-if="pdfTitleState === PdfTitleState.EDITING_URL"
+      v-model="url"
+      @blur="handleCancel"
+      @keydown.enter="handleAccept"
+    />
+    <div v-else class="title">{{ title }}</div>
+    <div v-if="props.isEditable" class="action-container" @click.stop @mousedown.prevent>
+      <template
+        v-if="
+          pdfTitleState === PdfTitleState.EDITING || pdfTitleState === PdfTitleState.EDITING_URL
+        "
+      >
+        <IconButton :icon="Checkmark24Regular" @click="handleAccept" />
+        <IconButton :icon="Dismiss24Regular" color="var(--color-decline)" @click="handleCancel" />
+      </template>
+      <template v-else>
+        <IconButton :icon="Edit24Regular" @click="handleEdit" />
+        <IconButton v-if="props.showFileButton" :icon="Document24Regular" @click="handleEditUrl" />
+        <IconButton
+          :icon="Delete24Regular"
+          color="var(--color-decline)"
+          @click="props.onDelete?.()"
+        />
+        <IconButton
+          v-if="props.showEyeButton"
+          :icon="props.isHidden ? EyeOff24Regular : Eye24Regular"
+          @click="props.onToggleHidden?.()"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <style scoped>
-.shadow-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  gap: var(--gap-sm);
-}
-
 .pdf-title-wrapper {
   background-color: var(--color-surface-container);
   border-radius: var(border-radius);

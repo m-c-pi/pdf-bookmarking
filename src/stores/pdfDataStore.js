@@ -33,7 +33,8 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   async function convertLegacy() {
     const syncData = await chrome.storage.sync.get(null)
     const legacyBookmarks = Object.entries(syncData).filter(
-      ([, value]) => value && typeof value === 'object' && 'url' in value && 'page' in value && 'title' in value
+      ([, value]) =>
+        value && typeof value === 'object' && 'url' in value && 'page' in value && 'title' in value,
     )
     if (legacyBookmarks.length === 0) return
 
@@ -107,7 +108,13 @@ export const usePdfDataStore = defineStore('pdfData', () => {
   }
 
   async function addBookmark(title, page, url = activeTabUrl.value) {
-    if (isPdf.value == false) {
+    // Bookmark can be added if the current opened tab is a pdf file
+    // and the bookmark is added to this file,
+    // or if it is added to an existing url in storage (Eg via 'All Bookmarks view')
+    // on a non-pdf tab.
+    let urlIsActiveTabAndPdf = isPdf.value == true && url == activeTabUrl.value
+    let isExistingUrl = allBookmarks.value[url] != null
+    if (!(urlIsActiveTabAndPdf || isExistingUrl)) {
       return false
     }
 

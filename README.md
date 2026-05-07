@@ -1,26 +1,16 @@
-<p align="center">
+<p align="left">
   <img src="public/icon-192x192.png" alt="Superior PDF Bookmarks" width="96" />
 </p>
 
-<h1 align="center">Superior PDF Bookmarks</h1>
+<h1 align="left">Superior PDF Bookmarks</h1>
 
-<p align="center">
-  A sophisticated and free Chrome extension for bookmarking PDF documents.
+<p align="left">
+  A free Chrome extension for bookmarking PDF documents.
 </p>
 
-<p align="center">
+<p align="left">
   <a href="https://chromewebstore.google.com/detail/superior-pdf-bookmarks/cmbcjkejdebbengdbindhfofkkendcon">Chrome Web Store</a>
 </p>
-
-## Features
-
-- **Page bookmarks** — Save bookmarks to specific pages in any PDF with custom titles
-- **Per-PDF and global views** — Switch between bookmarks for the current PDF or browse all saved bookmarks
-- **Drag-and-drop reordering** — Rearrange bookmarks and PDF entries freely
-- **Search** — Find bookmarks by title across all your PDFs
-- **Inline editing** — Rename bookmarks and PDF titles without leaving the popup
-- **Dark mode** — Automatic theme detection with a manual toggle
-- **Local storage** — All data stays in your browser via Chrome Storage API
 
 ## Installation
 
@@ -68,7 +58,7 @@ Requires Node.js `^20.19.0` or `>=22.12.0`.
 
 ## Contributing
 
-Contributions are welcome! Feel free to open an issue for feature requests or bugs.
+Feel free to open an issue for feature requests or bugs.
 
 ## License
 

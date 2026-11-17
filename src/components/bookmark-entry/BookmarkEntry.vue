@@ -83,15 +83,15 @@ watch(page, (newPage) => {
 
 <template>
   <div class="bookmark-entry-wrapper">
-    <div :class="['entry', { 'no-hover': pdfDataStore.isReorderingByDnd }]">
-      <div class="order-button-wrapper">
+    <div
+      :class="['entry', { 'no-hover': pdfDataStore.isReorderingByDnd }]"
+      @click="bookmarkState !== BookmarkState.EDITING && handleNavigate()"
+    >
+      <div class="order-button-wrapper" @click.stop>
         <ChevronUp24Regular class="order-icon" @click.stop="handleOrderChange('up')" />
         <ChevronDown24Regular class="order-icon" @click.stop="handleOrderChange('down')" />
       </div>
-      <div
-        class="title-wrapper"
-        @click="bookmarkState !== BookmarkState.EDITING && handleNavigate()"
-      >
+      <div class="title-wrapper">
         <EditNameInput
           v-if="bookmarkState === BookmarkState.EDITING"
           v-model="title"
@@ -141,6 +141,7 @@ watch(page, (newPage) => {
   min-width: 0;
   gap: var(--gap-md);
   border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .entry:not(.no-hover):hover {

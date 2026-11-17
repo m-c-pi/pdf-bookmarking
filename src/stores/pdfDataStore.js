@@ -64,14 +64,14 @@ export const usePdfDataStore = defineStore('pdfData', () => {
 
   async function init() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-    if (!tab?.url) return
+    if (tab?.url) {
+      const urlWithoutHash = tab.url.split('#')[0]
+      activeTabUrl.value = urlWithoutHash
+      isPdf.value = urlWithoutHash.endsWith('.pdf')
 
-    const urlWithoutHash = tab.url.split('#')[0]
-    activeTabUrl.value = urlWithoutHash
-    isPdf.value = urlWithoutHash.endsWith('.pdf')
-
-    const filename = urlWithoutHash.split('/').pop() || ''
-    pdfTitle.value = decodeURIComponent(filename.replace(/\.pdf$/i, '')).trim()
+      const filename = urlWithoutHash.split('/').pop() || ''
+      pdfTitle.value = decodeURIComponent(filename.replace(/\.pdf$/i, '')).trim()
+    }
 
     await convertLegacy()
     await loadBookmarks()
@@ -96,9 +96,9 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     await chrome.storage.local.set({ bookmarksByUrl: allBookmarks.value })
   }
 
-  function validateBookmark(title, page) {
+  function validateBookmark(title, page, url = activeTabUrl.value) {
     const trimmedTitle = title.trim()
-    const trimmedUrl = activeTabUrl.value.trim()
+    const trimmedUrl = url.trim()
 
     if (!trimmedTitle) return null
     if (!trimmedUrl) return null
@@ -118,7 +118,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
       return false
     }
 
-    const validated = validateBookmark(title, page)
+    const validated = validateBookmark(title, page, url)
     if (!validated) return false
 
     const timestamp = Date.now()
@@ -151,7 +151,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     const bookmark = allBookmarks.value[url]?.bookmarks?.[id]
     if (!bookmark) return false
 
-    const validated = validateBookmark(newTitle, bookmark.page)
+    const validated = validateBookmark(newTitle, bookmark.page, url)
     if (!validated) return false
 
     bookmark.title = validated.title
@@ -163,7 +163,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     const bookmark = allBookmarks.value[url]?.bookmarks?.[id]
     if (!bookmark) return false
 
-    const validated = validateBookmark(bookmark.title, newPage)
+    const validated = validateBookmark(bookmark.title, newPage, url)
     if (!validated) return false
 
     bookmark.page = validated.page

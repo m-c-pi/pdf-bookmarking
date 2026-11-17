@@ -34,8 +34,29 @@ const page = ref(props.bookmark.page)
 const errorModalStore = useErrorModalStore()
 
 const handleNavigate = async () => {
+  const targetUrl = `${props.bookmark.url}#page=${page.value}`
   try {
-    await chrome.tabs.create({ url: `${props.bookmark.url}#page=${page.value}` })
+    if (pdfDataStore.isPdf && props.bookmark.url === pdfDataStore.activeTabUrl) {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+      if (tab.url !== targetUrl) {
+        await new Promise((resolve, reject) => {
+          const listener = (updatedTabId, changeInfo) => {
+            if (updatedTabId === tab.id && changeInfo.url) {
+              chrome.tabs.onUpdated.removeListener(listener)
+              resolve()
+            }
+          }
+          chrome.tabs.onUpdated.addListener(listener)
+          chrome.tabs.update(tab.id, { url: targetUrl }).catch((err) => {
+            chrome.tabs.onUpdated.removeListener(listener)
+            reject(err)
+          })
+        })
+      }
+      await chrome.tabs.reload(tab.id)
+    } else {
+      await chrome.tabs.create({ url: targetUrl })
+    }
   } catch {
     errorModalStore.show(
       'Unable to open file',

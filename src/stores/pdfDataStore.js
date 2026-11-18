@@ -67,7 +67,7 @@ export const usePdfDataStore = defineStore('pdfData', () => {
     if (tab?.url) {
       const urlWithoutHash = tab.url.split('#')[0]
       activeTabUrl.value = urlWithoutHash
-      isPdf.value = urlWithoutHash.endsWith('.pdf')
+      isPdf.value = urlWithoutHash.toLowerCase().endsWith('.pdf')
 
       const filename = urlWithoutHash.split('/').pop() || ''
       pdfTitle.value = decodeURIComponent(filename.replace(/\.pdf$/i, '')).trim()

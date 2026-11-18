@@ -37,6 +37,12 @@ const handleNavigate = async () => {
   const targetUrl = `${props.bookmark.url}#page=${page.value}`
   try {
     if (pdfDataStore.isPdf && props.bookmark.url === pdfDataStore.activeTabUrl) {
+      if (
+        props.bookmark.url.startsWith('file://') &&
+        !(await chrome.extension.isAllowedFileSchemeAccess())
+      ) {
+        throw new Error('File access not allowed')
+      }
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
       if (tab.url !== targetUrl) {
         await new Promise((resolve, reject) => {
